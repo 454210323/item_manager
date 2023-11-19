@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
 import '../pages/about_page.dart';
 import '../pages/contact_page.dart';
 import '../pages/home_page.dart';
@@ -43,7 +44,7 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Logo",
+                  AppConst.appName,
                   style: TextStyle(
                       color: Colors.green, fontWeight: FontWeight.bold),
                 ),
@@ -68,7 +69,7 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
 
   Widget _drawer() => Drawer(
         child: ListView(
-          children: _menuItems
+          children: menuItems
               .map((item) => ListTile(
                     onTap: () {
                       Navigator.of(context).pop();
@@ -85,7 +86,7 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
   Widget _navBarItems() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: _menuItems
+        children: menuItems
             .map(
               (item) => InkWell(
                 onTap: () {
@@ -103,13 +104,6 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
             .toList(),
       );
 }
-
-final List<String> _menuItems = <String>[
-  'About',
-  'Contact',
-  'Settings',
-  'Sign Out',
-];
 
 Widget _currentPageContent(selectedMenuItem) {
   switch (selectedMenuItem) {
