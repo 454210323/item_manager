@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 import '../pages/about_page.dart';
-import '../pages/contact_page.dart';
 import '../pages/home_page.dart';
+import '../pages/item_page.dart';
 import '../pages/setting_page.dart';
 import '../pages/signout_page.dart';
 import 'profile_icon.dart';
@@ -69,7 +69,7 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
 
   Widget _drawer() => Drawer(
         child: ListView(
-          children: menuItems
+          children: AppConst.menuItems
               .map((item) => ListTile(
                     onTap: () {
                       Navigator.of(context).pop();
@@ -86,7 +86,7 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
   Widget _navBarItems() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: menuItems
+        children: AppConst.menuItems
             .map(
               (item) => InkWell(
                 onTap: () {
@@ -107,13 +107,13 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
 
 Widget _currentPageContent(selectedMenuItem) {
   switch (selectedMenuItem) {
-    case 'About':
+    case ScreenConst.ABOUT:
       return const AboutPage();
-    case 'Contact':
-      return const ContactPage();
-    case 'Settings':
+    case ScreenConst.ITEMS:
+      return const ItemPage();
+    case ScreenConst.SETTIMGS:
       return const SettingsPage();
-    case 'Sign Out':
+    case ScreenConst.SIGN_OUT:
       return const SignOutPage();
     default:
       return const HomePage();

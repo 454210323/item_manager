@@ -35,7 +35,7 @@ class _BarcodeScanState extends State<BarcodeScan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('BarCode Scan')),
+      appBar: AppBar(title: Text('Register New Item')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
