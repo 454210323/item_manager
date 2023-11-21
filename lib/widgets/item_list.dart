@@ -45,9 +45,9 @@ class _ItemListState extends State<ItemList> {
   List<DataColumn> _ItemTableColumns() {
     return [
       DataColumn(
-        label: Text('Item No'),
+        label: Text('Item Code'),
         onSort: (columnIndex, ascending) =>
-            _sort((item) => item.itemNo, columnIndex, ascending),
+            _sort((item) => item.itemCode, columnIndex, ascending),
       ),
       DataColumn(
         label: Text('Item Name'),
@@ -65,7 +65,7 @@ class _ItemListState extends State<ItemList> {
   List<DataRow> _ItemTableRows() {
     return _items
         .map((item) => DataRow(cells: [
-              DataCell(Text(item.itemNo)),
+              DataCell(Text(item.itemCode)),
               DataCell(Text(item.itemName)),
               DataCell(Text(item.itemPrice.toString()))
             ]))

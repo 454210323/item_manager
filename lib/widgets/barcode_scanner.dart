@@ -3,6 +3,8 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class BarcodeScan extends StatefulWidget {
+  const BarcodeScan({super.key});
+
   @override
   _BarcodeScanState createState() => _BarcodeScanState();
 }

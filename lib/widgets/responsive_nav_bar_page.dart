@@ -4,7 +4,7 @@ import '../constants.dart';
 import '../pages/about_page.dart';
 import '../pages/home_page.dart';
 import '../pages/item_page.dart';
-import '../pages/setting_page.dart';
+import '../pages/stock_page.dart';
 import '../pages/signout_page.dart';
 import 'profile_icon.dart';
 
@@ -111,8 +111,8 @@ Widget _currentPageContent(selectedMenuItem) {
       return const AboutPage();
     case ScreenConst.ITEMS:
       return const ItemPage();
-    case ScreenConst.SETTIMGS:
-      return const SettingsPage();
+    case ScreenConst.STOCK:
+      return const StockPage();
     case ScreenConst.SIGN_OUT:
       return const SignOutPage();
     default:

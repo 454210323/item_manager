@@ -3,7 +3,7 @@ class AppConst {
   static const List<String> menuItems = <String>[
     ScreenConst.ABOUT,
     ScreenConst.ITEMS,
-    ScreenConst.SETTIMGS,
+    ScreenConst.STOCK,
     ScreenConst.SIGN_OUT,
   ];
 }
@@ -11,12 +11,14 @@ class AppConst {
 class ScreenConst {
   static const ABOUT = "ABOUT";
   static const ITEMS = "ITEMS";
-  static const SETTIMGS = "SETTIMGS";
+  static const STOCK = "STOCK";
   static const SIGN_OUT = "SIGN_OUT";
 }
 
 class API {
   static const BASE_URL = "http://127.0.0.1:5000/";
-  // request for Item List
+  // Item List (GET)
   static const ITEM_LIST = "${BASE_URL}ItemList";
+  // Register New Item (POST)
+  static const REGISTER_ITEM = "${BASE_URL}RegisterItem";
 }
