@@ -55,9 +55,9 @@ class _ItemListState extends State<ItemList> {
             _sort((item) => item.itemName, columnIndex, ascending),
       ),
       DataColumn(
-        label: Text('Item Price'),
+        label: Text('Price'),
         onSort: (columnIndex, ascending) =>
-            _sort<num>((item) => item.itemPrice, columnIndex, ascending),
+            _sort<num>((item) => item.price, columnIndex, ascending),
       ),
     ];
   }
@@ -67,7 +67,7 @@ class _ItemListState extends State<ItemList> {
         .map((item) => DataRow(cells: [
               DataCell(Text(item.itemCode)),
               DataCell(Text(item.itemName)),
-              DataCell(Text(item.itemPrice.toString()))
+              DataCell(Text(item.price.toString()))
             ]))
         .toList();
   }
@@ -79,7 +79,7 @@ class _ItemListState extends State<ItemList> {
   }
 
   Future<void> fetchData() async {
-    var url = Uri.parse(API.ITEM_LIST);
+    var url = Uri.parse(API.ITEM_INFOS);
     var response = await http.get(url);
 
     if (response.statusCode == 200) {

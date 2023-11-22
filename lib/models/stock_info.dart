@@ -1,22 +1,22 @@
 import 'item_info.dart';
 
-class StockInfo extends ItemInfo {
+class StockShipmentInfo extends ItemInfo {
   final int stockQuantity;
   final int shipmentQuantity;
 
-  StockInfo({
+  StockShipmentInfo({
     required super.itemCode,
     required super.itemName,
-    required super.itemPrice,
+    required super.price,
     required this.stockQuantity,
     required this.shipmentQuantity,
   });
 
-  factory StockInfo.fromJson(Map<String, dynamic> json) {
-    return StockInfo(
+  factory StockShipmentInfo.fromJson(Map<String, dynamic> json) {
+    return StockShipmentInfo(
       itemCode: json['item_code'],
       itemName: json['item_name'],
-      itemPrice: json['item_price'],
+      price: json['price'],
       stockQuantity: json['stock_quantity'],
       shipmentQuantity: json['shipment_quantity'],
     );
