@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 import '../models/stock_info.dart';
+import '../utils/dynamic_data_table.dart';
 
 class StockShipmentPage extends StatefulWidget {
   const StockShipmentPage({super.key});
@@ -15,10 +16,14 @@ class StockShipmentPage extends StatefulWidget {
 }
 
 class _StockShipmentPageState extends State<StockShipmentPage> {
-  List<StockShipmentInfo> _results = [];
+  List<StockShipmentInfo> _stockShipmentInfos = [];
+  bool _isSearching = false;
 
   Future<void> _onSearch(
       String itemCode, String itemType, String itemSerise) async {
+    setState(() {
+      _isSearching = true;
+    });
     var url = Uri.parse(API.STOCK_SHIPMENT_INFOS).replace(queryParameters: {
       'itemCode': itemCode,
       'itemType': itemType,
@@ -31,9 +36,10 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
       var data = json.decode(response.body)['stock_shipment_infos'];
 
       setState(() {
-        _results = data
+        _stockShipmentInfos = data
             .map<StockShipmentInfo>((json) => StockShipmentInfo.fromJson(json))
             .toList();
+        _isSearching = false;
       });
     }
   }
@@ -46,10 +52,18 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
         children: <Widget>[
           SearchForm(
             onSearch: _onSearch,
-          )
-          // Expanded(
-          //   child: SearchResultsWidget(results: _results),
-          // ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: _stockShipmentInfos.isEmpty
+                  ? const Text("no data")
+                  : SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: DynamicDataTable(data: _stockShipmentInfos),
+                    ),
+            ),
+          ),
         ],
       ),
     );

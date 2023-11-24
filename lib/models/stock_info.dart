@@ -21,4 +21,14 @@ class StockShipmentInfo extends ItemInfo {
       shipmentQuantity: json['shipment_quantity'],
     );
   }
+  @override
+  Map<String, dynamic> toTableData() {
+    return {
+      'itemCode': itemCode,
+      'itemName': itemName,
+      'price': price,
+      'stockQuantity': stockQuantity,
+      'shipmentQuantity': shipmentQuantity
+    };
+  }
 }

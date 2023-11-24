@@ -1,4 +1,6 @@
-class ItemInfo {
+import 'package:flutter_application_1/models/table_item.dart';
+
+class ItemInfo extends TableItem {
   final String itemCode;
   final String itemName;
   final int price;
@@ -12,5 +14,9 @@ class ItemInfo {
       itemName: json['item_name'],
       price: json['price'],
     );
+  }
+  @override
+  Map<String, dynamic> toTableData() {
+    return {'itemCode': itemCode, 'itemName': itemName, 'price': price};
   }
 }

@@ -71,32 +71,46 @@ class _SearchFormState extends State<SearchForm> {
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Row(
+      child: Column(
         children: [
-          Expanded(
-            child: TextFormField(
-                decoration: const InputDecoration(labelText: 'Item Code'),
-                onSaved: ((value) => _itemCode = value!)),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                    decoration: const InputDecoration(labelText: 'Item Code'),
+                    onSaved: ((value) => _itemCode = value!)),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  String barcodeResult = await BarcodeScannerUtil.scanBarcode();
+                  setState(() {
+                    _itemCode = barcodeResult;
+                  });
+                },
+                child: const Text('Scan'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () async {
-              String barcodeResult = await BarcodeScannerUtil.scanBarcode();
-              setState(() {
-                _itemCode = barcodeResult;
-              });
-            },
-            child: const Text('Scan'),
+          Row(
+            children: [
+              const Text("Item Type"),
+              CustomDropdownButton(
+                options: _itemTypes,
+                onSelected: _setSelectedItemType,
+              ),
+              const Text("Item Type"),
+              CustomDropdownButton(
+                options: _itemSerises,
+                onSelected: _setSelectedItemSerises,
+              ),
+            ],
           ),
-          CustomDropdownButton(
-            options: _itemTypes,
-            onSelected: _setSelectedItemType,
-          ),
-          CustomDropdownButton(
-            options: _itemSerises,
-            onSelected: _setSelectedItemSerises,
-          ),
-          ElevatedButton(
-              onPressed: _onSearchPressed, child: const Text("search"))
+          Row(
+            children: [
+              ElevatedButton(
+                  onPressed: _onSearchPressed, child: const Text("search"))
+            ],
+          )
         ],
       ),
     );

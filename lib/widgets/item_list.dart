@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../models/item_info.dart';
+import '../utils/dynamic_data_table.dart';
 
 class ItemList extends StatefulWidget {
   const ItemList({super.key});
@@ -14,63 +15,6 @@ class ItemList extends StatefulWidget {
 
 class _ItemListState extends State<ItemList> {
   List<ItemInfo> _items = [];
-
-  int _currentSortColumn = 0;
-  bool _isSortAsc = true;
-
-  void _sort<T>(Comparable<T> Function(ItemInfo item) getField, int columnIndex,
-      bool ascending) {
-    _items.sort((ItemInfo a, ItemInfo b) {
-      final aValue = getField(a);
-      final bValue = getField(b);
-      return ascending
-          ? Comparable.compare(aValue, bValue)
-          : Comparable.compare(bValue, aValue);
-    });
-    setState(() {
-      _currentSortColumn = columnIndex;
-      _isSortAsc = ascending;
-    });
-  }
-
-  DataTable _ItemTable() {
-    return DataTable(
-      columns: _ItemTableColumns(),
-      rows: _ItemTableRows(),
-      sortColumnIndex: _currentSortColumn,
-      sortAscending: _isSortAsc,
-    );
-  }
-
-  List<DataColumn> _ItemTableColumns() {
-    return [
-      DataColumn(
-        label: Text('Item Code'),
-        onSort: (columnIndex, ascending) =>
-            _sort((item) => item.itemCode, columnIndex, ascending),
-      ),
-      DataColumn(
-        label: Text('Item Name'),
-        onSort: (columnIndex, ascending) =>
-            _sort((item) => item.itemName, columnIndex, ascending),
-      ),
-      DataColumn(
-        label: Text('Price'),
-        onSort: (columnIndex, ascending) =>
-            _sort<num>((item) => item.price, columnIndex, ascending),
-      ),
-    ];
-  }
-
-  List<DataRow> _ItemTableRows() {
-    return _items
-        .map((item) => DataRow(cells: [
-              DataCell(Text(item.itemCode)),
-              DataCell(Text(item.itemName)),
-              DataCell(Text(item.price.toString()))
-            ]))
-        .toList();
-  }
 
   @override
   void initState() {
@@ -96,14 +40,19 @@ class _ItemListState extends State<ItemList> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width,
+        child: _items.isEmpty
+            ? const CircularProgressIndicator()
+            : SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: MediaQuery.of(context).size.width,
+                  ),
+                  child: DynamicDataTable(
+                    data: _items,
+                  ),
+                ),
               ),
-              child: _ItemTable(),
-            )),
       ),
     );
   }

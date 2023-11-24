@@ -1,3 +1,4 @@
+from time import sleep
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -7,6 +8,7 @@ CORS(app)
 
 @app.route("/ItemInfos", methods=["GET"])
 def _get_item_list():
+    sleep(2)
     return jsonify(
         {
             "item_infos": [
@@ -50,7 +52,7 @@ def _get_stock_shipment_infos():
     print("Received parameters:", itemCode, itemType, itemSerise)
     return jsonify(
         {
-            "item_types": [
+            "stock_shipment_infos": [
                 {
                     "item_code": "1000",
                     "item_type": "a1",
