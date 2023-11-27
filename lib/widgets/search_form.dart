@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../constants.dart';
-import '../utils/barcode_scanner_util.dart';
+import 'barcode_scanner.dart';
 import 'drop_down.dart';
 
 class SearchForm extends StatefulWidget {
@@ -42,14 +42,14 @@ class _SearchFormState extends State<SearchForm> {
     if (typesResponse.statusCode == 200) {
       setState(() {
         _itemTypes =
-            List<String>.from(json.decode(typesResponse.body)["item_types"]);
+            List<String>.from(json.decode(typesResponse.body)["types"]);
         _itemTypes.insert(0, '');
       });
     }
     if (serisesResponse.statusCode == 200) {
       setState(() {
-        _itemSerises = List<String>.from(
-            json.decode(serisesResponse.body)["item_serises"]);
+        _itemSerises =
+            List<String>.from(json.decode(serisesResponse.body)["serises"]);
         _itemSerises.insert(0, '');
       });
     }
@@ -82,7 +82,7 @@ class _SearchFormState extends State<SearchForm> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  String barcodeResult = await BarcodeScannerUtil.scanBarcode();
+                  String barcodeResult = await BarcodeScanner.scanBarcode();
                   setState(() {
                     _itemCode = barcodeResult;
                   });

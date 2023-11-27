@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/utils/dynamic_data_table.dart';
+import 'package:flutter_application_1/widgets/dynamic_data_table.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants.dart';
@@ -38,6 +38,16 @@ class _ItemPageState extends State<ItemPage> {
     }
   }
 
+  List<String> getVisiableColumns(double screenWidth) {
+    if (screenWidth < 800) {
+      return ItemInfo.columnsForSmallScreen;
+    } else if (screenWidth < 1600) {
+      return ItemInfo.columnsForMediumScreen;
+    } else {
+      return ItemInfo.columnsForLargeScreen;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +64,11 @@ class _ItemPageState extends State<ItemPage> {
                       ? const CircularProgressIndicator()
                       : SizedBox(
                           width: MediaQuery.of(context).size.width,
-                          child: DynamicDataTable(data: _items),
+                          child: DynamicDataTable(
+                            data: _items,
+                            visibleColumns: getVisiableColumns(
+                                MediaQuery.of(context).size.width),
+                          ),
                         ),
                 ),
               ),

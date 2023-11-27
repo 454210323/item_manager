@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 import '../models/stock_info.dart';
-import '../utils/dynamic_data_table.dart';
+import '../widgets/dynamic_data_table.dart';
 
 class StockShipmentPage extends StatefulWidget {
   const StockShipmentPage({super.key});
@@ -17,13 +17,9 @@ class StockShipmentPage extends StatefulWidget {
 
 class _StockShipmentPageState extends State<StockShipmentPage> {
   List<StockShipmentInfo> _stockShipmentInfos = [];
-  bool _isSearching = false;
 
   Future<void> _onSearch(
       String itemCode, String itemType, String itemSerise) async {
-    setState(() {
-      _isSearching = true;
-    });
     var url = Uri.parse(API.STOCK_SHIPMENT_INFOS).replace(queryParameters: {
       'itemCode': itemCode,
       'itemType': itemType,
@@ -39,8 +35,17 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
         _stockShipmentInfos = data
             .map<StockShipmentInfo>((json) => StockShipmentInfo.fromJson(json))
             .toList();
-        _isSearching = false;
       });
+    }
+  }
+
+  List<String> getVisiableColumns(double screenWidth) {
+    if (screenWidth < 800) {
+      return StockShipmentInfo.columnsForSmallScreen;
+    } else if (screenWidth < 1600) {
+      return StockShipmentInfo.columnsForMediumScreen;
+    } else {
+      return StockShipmentInfo.columnsForLargeScreen;
     }
   }
 
@@ -60,7 +65,11 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
                   ? const Text("no data")
                   : SizedBox(
                       width: MediaQuery.of(context).size.width,
-                      child: DynamicDataTable(data: _stockShipmentInfos),
+                      child: DynamicDataTable(
+                        data: _stockShipmentInfos,
+                        visibleColumns: getVisiableColumns(
+                            MediaQuery.of(context).size.width),
+                      ),
                     ),
             ),
           ),

@@ -4,8 +4,15 @@ import '../models/table_item.dart';
 
 class DynamicDataTable extends StatefulWidget {
   final List<TableItem> data;
+  final int interactiveColumnIndex;
+  final List<String> visibleColumns;
 
-  DynamicDataTable({required this.data});
+  DynamicDataTable({
+    super.key,
+    required this.data,
+    this.visibleColumns = const [],
+    this.interactiveColumnIndex = 0,
+  });
 
   @override
   State<DynamicDataTable> createState() => _DynamicDataTableState();
@@ -30,7 +37,13 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
     if (widget.data.isEmpty) {
       return [];
     }
-    var keys = widget.data[0].toTableData().keys.toList();
+    var keys = widget.data[0]
+        .toTableData()
+        .keys
+        .where((key) =>
+            widget.visibleColumns.isEmpty ||
+            widget.visibleColumns.contains(key))
+        .toList();
     return List.generate(keys.length, (index) {
       String columnName = keys[index];
 
@@ -54,8 +67,41 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
 
   List<DataRow> _itemTableRows() {
     return widget.data.map((item) {
-      var cells = item.toTableData().values.map((value) {
-        return DataCell(Text(value.toString()));
+      var data = item.toTableData();
+      var filterdData = data.keys
+          .where((key) =>
+              widget.visibleColumns.isEmpty ||
+              widget.visibleColumns.contains(key))
+          .map((key) => data[key])
+          .toList();
+
+      var cells = filterdData.asMap().entries.map((e) {
+        if (e.key == widget.interactiveColumnIndex) {
+          return DataCell(
+            Text(e.value.toString()),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Detail'),
+                    content: const Text('For detail'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('close'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          );
+        } else {
+          return DataCell(Text(e.value.toString()));
+        }
       }).toList();
       return DataRow(cells: cells);
     }).toList();

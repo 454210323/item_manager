@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../constants.dart';
-import '../utils/barcode_scanner_util.dart';
-import '../utils/show_snack_bar.dart';
+import 'barcode_scanner.dart';
+import 'show_snack_bar.dart';
 
 class RegisterItemForm extends StatefulWidget {
   const RegisterItemForm({super.key});
@@ -76,7 +76,7 @@ class _RegisterItemFormState extends State<RegisterItemForm> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                    _itemCode = await BarcodeScannerUtil.scanBarcode();
+                    _itemCode = await BarcodeScanner.scanBarcode();
                   },
                   child: const Text('Scan'),
                 )
