@@ -4,22 +4,22 @@ class ItemInfo extends TableItem {
   final String itemCode;
   final String itemName;
   final String type;
-  final String serise;
+  final String series;
   final int price;
 
   ItemInfo(
       {required this.itemCode,
       required this.itemName,
       required this.type,
-      required this.serise,
+      required this.series,
       required this.price});
 
   factory ItemInfo.fromJson(Map<String, dynamic> json) {
     return ItemInfo(
       itemCode: json['item_code'],
       itemName: json['item_name'],
-      type: json['type'],
-      serise: json['serise'],
+      type: json['item_type'],
+      series: json['series'],
       price: json['price'],
     );
   }
@@ -29,7 +29,7 @@ class ItemInfo extends TableItem {
       'itemCode': itemCode,
       'itemName': itemName,
       'type': type,
-      'serise': serise,
+      'series': series,
       'price': price
     };
   }
@@ -38,7 +38,7 @@ class ItemInfo extends TableItem {
     'itemCode',
     'itemName',
     'type',
-    'serise',
+    'series',
     'price',
   ];
 
@@ -46,7 +46,7 @@ class ItemInfo extends TableItem {
     'itemCode',
     'itemName',
     'type',
-    'serise',
+    'series',
     'price',
   ];
 

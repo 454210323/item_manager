@@ -51,6 +51,9 @@ class _ItemPageState extends State<ItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Item List"),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(

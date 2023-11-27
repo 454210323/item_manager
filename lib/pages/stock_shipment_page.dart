@@ -51,29 +51,32 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        children: <Widget>[
-          SearchForm(
-            onSearch: _onSearch,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: _stockShipmentInfos.isEmpty
-                  ? const Text("no data")
-                  : SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: DynamicDataTable(
-                        data: _stockShipmentInfos,
-                        visibleColumns: getVisiableColumns(
-                            MediaQuery.of(context).size.width),
-                      ),
-                    ),
+    return Scaffold(
+      appBar: AppBar(title: const Text("Stock and Shipment")),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: <Widget>[
+            SearchForm(
+              onSearch: _onSearch,
             ),
-          ),
-        ],
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: _stockShipmentInfos.isEmpty
+                    ? const Text("no data")
+                    : SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: DynamicDataTable(
+                          data: _stockShipmentInfos,
+                          visibleColumns: getVisiableColumns(
+                              MediaQuery.of(context).size.width),
+                        ),
+                      ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

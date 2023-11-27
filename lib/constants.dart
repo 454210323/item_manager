@@ -4,7 +4,7 @@ class AppConst {
     ScreenConst.ABOUT,
     ScreenConst.ITEMS,
     ScreenConst.STOCK_SHIPMENT,
-    ScreenConst.SIGN_OUT,
+    ScreenConst.EXTRA_EXPENDITURE,
   ];
 }
 
@@ -12,7 +12,7 @@ class ScreenConst {
   static const ABOUT = "ABOUT";
   static const ITEMS = "ITEMS";
   static const STOCK_SHIPMENT = "STOCK SHIPMENT";
-  static const SIGN_OUT = "SIGN_OUT";
+  static const EXTRA_EXPENDITURE = "EXTRA EXPENDITURE";
 }
 
 class API {
@@ -20,7 +20,7 @@ class API {
   // Item Types (GET)
   static const ITEM_TYPES = "${BASE_URL}ItemTypes";
 // Item Serises (GET)
-  static const ITEM_SERISES = "${BASE_URL}ItemSerises";
+  static const ITEM_SERIES = "${BASE_URL}ItemSeries";
   // Item Infos (GET)
   static const ITEM_INFOS = "${BASE_URL}ItemInfos";
   // Register New Item (POST)

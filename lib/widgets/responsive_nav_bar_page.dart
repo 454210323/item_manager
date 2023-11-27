@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 import '../pages/about_page.dart';
+import '../pages/extra_expenditure_page.dart';
 import '../pages/home_page.dart';
 import '../pages/item_page.dart';
 import '../pages/stock_shipment_page.dart';
-import '../pages/signout_page.dart';
 import 'profile_icon.dart';
 
 class ResponsiveNavBarPage extends StatefulWidget {
@@ -113,8 +113,8 @@ Widget _currentPageContent(selectedMenuItem) {
       return const ItemPage();
     case ScreenConst.STOCK_SHIPMENT:
       return const StockShipmentPage();
-    case ScreenConst.SIGN_OUT:
-      return const SignOutPage();
+    case ScreenConst.EXTRA_EXPENDITURE:
+      return const ExtraExpenditurePage();
     default:
       return const HomePage();
   }

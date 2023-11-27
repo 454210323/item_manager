@@ -19,14 +19,14 @@ class _SearchFormState extends State<SearchForm> {
   final _formKey = GlobalKey<FormState>();
   String _itemCode = '';
   String _selectedItemType = '';
-  String _selectedItemSerise = '';
+  String _selectedItemSeries = '';
   List<String> _itemTypes = [];
-  List<String> _itemSerises = [];
+  List<String> _itemSeries = [];
 
   void _onSearchPressed() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      widget.onSearch(_itemCode, _selectedItemType, _selectedItemSerise);
+      widget.onSearch(_itemCode, _selectedItemType, _selectedItemSeries);
     }
   }
 
@@ -38,19 +38,19 @@ class _SearchFormState extends State<SearchForm> {
 
   Future<void> _fetchData() async {
     var typesResponse = await http.get(Uri.parse(API.ITEM_TYPES));
-    var serisesResponse = await http.get(Uri.parse(API.ITEM_SERISES));
+    var seriesResponse = await http.get(Uri.parse(API.ITEM_SERIES));
     if (typesResponse.statusCode == 200) {
       setState(() {
         _itemTypes =
-            List<String>.from(json.decode(typesResponse.body)["types"]);
+            List<String>.from(json.decode(typesResponse.body)["item_types"]);
         _itemTypes.insert(0, '');
       });
     }
-    if (serisesResponse.statusCode == 200) {
+    if (seriesResponse.statusCode == 200) {
       setState(() {
-        _itemSerises =
-            List<String>.from(json.decode(serisesResponse.body)["serises"]);
-        _itemSerises.insert(0, '');
+        _itemSeries =
+            List<String>.from(json.decode(seriesResponse.body)["series"]);
+        _itemSeries.insert(0, '');
       });
     }
   }
@@ -61,9 +61,9 @@ class _SearchFormState extends State<SearchForm> {
     });
   }
 
-  void _setSelectedItemSerises(String value) {
+  void _setSelectedItemSeries(String value) {
     setState(() {
-      _selectedItemSerise = value;
+      _selectedItemSeries = value;
     });
   }
 
@@ -98,10 +98,10 @@ class _SearchFormState extends State<SearchForm> {
                 options: _itemTypes,
                 onSelected: _setSelectedItemType,
               ),
-              const Text("Item Type"),
+              const Text("Item Series"),
               CustomDropdownButton(
-                options: _itemSerises,
-                onSelected: _setSelectedItemSerises,
+                options: _itemSeries,
+                onSelected: _setSelectedItemSeries,
               ),
             ],
           ),

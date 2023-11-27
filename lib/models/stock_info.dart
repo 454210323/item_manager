@@ -8,7 +8,7 @@ class StockShipmentInfo extends ItemInfo {
     required super.itemCode,
     required super.itemName,
     required super.type,
-    required super.serise,
+    required super.series,
     required super.price,
     required this.stockQuantity,
     required this.shipmentQuantity,
@@ -18,8 +18,8 @@ class StockShipmentInfo extends ItemInfo {
     return StockShipmentInfo(
       itemCode: json['item_code'],
       itemName: json['item_name'],
-      type: json['type'],
-      serise: json['serise'],
+      type: json['item_type'],
+      series: json['series'],
       price: json['price'],
       stockQuantity: json['stock_quantity'],
       shipmentQuantity: json['shipment_quantity'],
@@ -31,7 +31,7 @@ class StockShipmentInfo extends ItemInfo {
       'itemCode': itemCode,
       'itemName': itemName,
       'type': type,
-      'serise': serise,
+      'series': series,
       'price': price,
       'stockQuantity': stockQuantity,
       'shipmentQuantity': shipmentQuantity
@@ -42,7 +42,7 @@ class StockShipmentInfo extends ItemInfo {
     'itemCode',
     'itemName',
     'type',
-    'serise',
+    'series',
     'price',
     'stockQuantity',
     'shipmentQuantity',
@@ -52,7 +52,7 @@ class StockShipmentInfo extends ItemInfo {
     'itemCode',
     'itemName',
     'type',
-    'serise',
+    'series',
     'stockQuantity',
     'shipmentQuantity',
   ];
@@ -60,7 +60,7 @@ class StockShipmentInfo extends ItemInfo {
   static const columnsForSmallScreen = [
     'itemName',
     'type',
-    'serise',
+    'series',
     'stockQuantity',
   ];
 }
