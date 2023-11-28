@@ -28,5 +28,5 @@ class API {
   // Stock Shipemnt List (GET)
   static const STOCK_SHIPMENT_INFOS = "${BASE_URL}StockShipmentInfos";
   // Register Extra Expenditure
-  static const EXTRA_EXPENSE = "${BASE_URL}RegisterExtraExpense";
+  static const EXTRA_EXPENSE = "${BASE_URL}ExtraExpense/register";
 }
