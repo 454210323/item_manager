@@ -1,4 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_application_1/widgets/drop_down.dart';
+import 'package:flutter_application_1/widgets/show_snack_bar.dart';
+import 'package:http/http.dart' as http;
+
+import '../constants.dart';
 
 class TravelExpenses extends StatefulWidget {
   const TravelExpenses({super.key});
@@ -8,74 +16,94 @@ class TravelExpenses extends StatefulWidget {
 }
 
 class _TravelExpensesState extends State<TravelExpenses> {
-  String? arrowType;
-  List<String> stationList = []; // 存储车站列表
+  final _formKey = GlobalKey<FormState>();
+  String _fromStation = '';
+  String _toStation = '';
+  String _selectedType = '';
+  int _expense = 0;
 
-  // 模拟从 API 获取车站数据的函数
-  void searchStations(String query) {
-    // 假设您的 API 返回一个车站名称列表
-    // 这里用一些示例数据来模拟
+  void _setSelectedType(String value) {
     setState(() {
-      stationList = ['Tokyo', 'Osaka', 'Kyoto'].where((station) {
-        return station.toLowerCase().contains(query.toLowerCase());
-      }).toList();
+      _selectedType = value;
     });
+  }
+
+  Future<void> _submitForm() async {
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    _formKey.currentState!.save();
+    try {
+      final response = await http.post(
+        Uri.parse(API.EXTRA_EXPENSE),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'expenseType': 'travel',
+          'content': "$_fromStation-$_selectedType-$_toStation",
+          'expense': _expense,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        showSnackBar(context, 'Registration successful');
+      } else {
+        showSnackBar(context, 'Registration failed');
+      }
+    } catch (e) {
+      showSnackBar(context, 'An error occurred: $e');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Autocomplete<String>(
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              if (textEditingValue.text == '') {
-                return const Iterable<String>.empty();
-              }
-              return stationList.where((String option) {
-                return option
-                    .toLowerCase()
-                    .contains(textEditingValue.text.toLowerCase());
-              });
-            },
-            onSelected: (String selection) {
-              debugPrint('You just selected $selection');
-            },
-          ),
+    return Form(
+      key: _formKey,
+      child: Column(children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                decoration: const InputDecoration(labelText: 'From'),
+                onSaved: (value) => _fromStation = value!,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 25),
+              child: CustomDropdownButton(
+                  options: const ['one way', 'round'],
+                  onSelected: _setSelectedType),
+            ),
+            Expanded(
+              child: TextFormField(
+                  decoration: const InputDecoration(labelText: 'To'),
+                  onSaved: (value) => _toStation = value!),
+            ),
+            Expanded(
+              child: TextFormField(
+                decoration: const InputDecoration(labelText: 'Expense'),
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp("[0-9]")),
+                ],
+                onSaved: (value) => _expense = int.parse(value!),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter an expense value';
+                  }
+                  return null;
+                },
+              ),
+            ),
+          ],
         ),
-        DropdownButton<String>(
-          value: arrowType,
-          onChanged: (String? newValue) {
-            setState(() {
-              arrowType = newValue;
-            });
-          },
-          items: <String>['one-way', 'round-trip']
-              .map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ),
-        Expanded(
-          child: Autocomplete<String>(
-            optionsBuilder: (TextEditingValue textEditingValue) {
-              if (textEditingValue.text == '') {
-                return const Iterable<String>.empty();
-              }
-              return stationList.where((String option) {
-                return option
-                    .toLowerCase()
-                    .contains(textEditingValue.text.toLowerCase());
-              });
-            },
-            onSelected: (String selection) {
-              debugPrint('You just selected $selection');
-            },
-          ),
-        ),
-      ],
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ElevatedButton(
+              onPressed: _submitForm, child: const Text("register")),
+        )
+      ]),
     );
   }
 }

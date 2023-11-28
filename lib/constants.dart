@@ -4,7 +4,7 @@ class AppConst {
     ScreenConst.ABOUT,
     ScreenConst.ITEMS,
     ScreenConst.STOCK_SHIPMENT,
-    ScreenConst.EXTRA_EXPENDITURE,
+    ScreenConst.EXTRA_EXPENSE,
   ];
 }
 
@@ -12,7 +12,7 @@ class ScreenConst {
   static const ABOUT = "ABOUT";
   static const ITEMS = "ITEMS";
   static const STOCK_SHIPMENT = "STOCK SHIPMENT";
-  static const EXTRA_EXPENDITURE = "EXTRA EXPENDITURE";
+  static const EXTRA_EXPENSE = "EXTRA EXPENSE";
 }
 
 class API {
@@ -27,4 +27,6 @@ class API {
   static const REGISTER_ITEM = "${BASE_URL}RegisterItem";
   // Stock Shipemnt List (GET)
   static const STOCK_SHIPMENT_INFOS = "${BASE_URL}StockShipmentInfos";
+  // Register Extra Expenditure
+  static const EXTRA_EXPENSE = "${BASE_URL}RegisterExtraExpense";
 }

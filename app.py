@@ -199,5 +199,14 @@ def _get_series():
     return jsonify({"series": ["series1", "series2", "series3", "series4", "series5"]})
 
 
+@app.route("/RegisterExtraExpense", methods=["POST"])
+def _post_register_extra_expense():
+    data = request.json
+
+    print("Received data:", data)
+
+    return jsonify({"message": "Data received", "data": data})
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)

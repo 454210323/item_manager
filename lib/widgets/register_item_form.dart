@@ -18,7 +18,7 @@ class _RegisterItemFormState extends State<RegisterItemForm> {
   final _formKey = GlobalKey<FormState>();
   String _itemCode = '';
   String _itemName = '';
-  int _itemPrice = 0;
+  int _price = 0;
   Future<void> _submitForm() async {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) {
@@ -34,7 +34,7 @@ class _RegisterItemFormState extends State<RegisterItemForm> {
       body: jsonEncode(<String, dynamic>{
         'itemCode': _itemCode,
         'itemName': _itemName,
-        'itemPrice': _itemPrice,
+        'price': _price,
       }),
     );
 
@@ -101,7 +101,7 @@ class _RegisterItemFormState extends State<RegisterItemForm> {
                 FilteringTextInputFormatter.digitsOnly,
               ],
               onSaved: (value) {
-                _itemPrice = int.parse(value!);
+                _price = int.parse(value!);
               },
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -110,9 +110,12 @@ class _RegisterItemFormState extends State<RegisterItemForm> {
                 return null;
               },
             ),
-            ElevatedButton(
-              onPressed: _submitForm,
-              child: const Text('Register'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: _submitForm,
+                child: const Text('Register'),
+              ),
             ),
           ],
         ),
