@@ -11,3 +11,11 @@ class ExtraExpense(db.Model):
 
     def __repr__(self):
         return f"<ExtraExpense {self.id} {self.expense_type}>"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "expense_type": self.expense_type,
+            "expense": self.expense,
+            "expense_content": self.expense_content,
+        }

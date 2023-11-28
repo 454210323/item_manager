@@ -12,5 +12,6 @@ db.init_app(app)
 
 app.register_blueprint(extra_expense_controller.bp_extra_expense)
 app.register_blueprint(stub_controller.bp_stub)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
