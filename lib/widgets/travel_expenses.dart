@@ -36,7 +36,7 @@ class _TravelExpensesState extends State<TravelExpenses> {
     _formKey.currentState!.save();
     try {
       final response = await http.post(
-        Uri.parse(API.EXTRA_EXPENSE),
+        Uri.parse(API.REGISTER_EXTRA_EXPENSE),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -73,8 +73,7 @@ class _TravelExpensesState extends State<TravelExpenses> {
             Padding(
               padding: const EdgeInsets.only(top: 25),
               child: CustomDropdownButton(
-                  options: const ['one way', 'round'],
-                  onSelected: _setSelectedType),
+                  options: const ['⇒', '⇔'], onSelected: _setSelectedType),
             ),
             Expanded(
               child: TextFormField(

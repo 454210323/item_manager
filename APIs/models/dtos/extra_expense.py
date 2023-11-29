@@ -1,13 +1,15 @@
+import decimal
 from database import db
+from marshmallow import Schema, fields
 
 
 class ExtraExpense(db.Model):
     __tablename__ = "extra_expense"
 
-    id = db.Column(db.Integer, primary_key=True)  # 对应于表中的 id 字段
-    expense_type = db.Column(db.String, nullable=False)  # 对应于表中的 expense_type 字段
-    expense = db.Column(db.Numeric, nullable=False)  # 对应于表中的 expense 字段
-    expense_content = db.Column(db.String, nullable=True)  # 对应于表中的 expense_content 字段
+    id = db.Column(db.Integer, primary_key=True)
+    expense_type = db.Column(db.String, nullable=False)
+    expense = db.Column(db.Numeric, nullable=False)
+    expense_content = db.Column(db.String, nullable=True)
 
     def __repr__(self):
         return f"<ExtraExpense {self.id} {self.expense_type}>"
@@ -19,3 +21,10 @@ class ExtraExpense(db.Model):
             "expense": self.expense,
             "expense_content": self.expense_content,
         }
+
+
+class ExtraExpenseSchema(Schema):
+    id = fields.Int()
+    expense_type = fields.Str()
+    expense = fields.Decimal()
+    expense_content = fields.Str()

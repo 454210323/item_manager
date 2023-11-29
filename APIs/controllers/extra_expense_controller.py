@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional, Union, Any
 from flask import Blueprint, jsonify, request
-from models.dtos.extra_expense import ExtraExpense
+from models.dtos.extra_expense import ExtraExpense, ExtraExpenseSchema
 from database import db
 
 
@@ -10,7 +10,10 @@ bp_extra_expense = Blueprint("extra_expense", __name__, url_prefix="/ExtraExpens
 @bp_extra_expense.route("/get")
 def _get_extra_expense():
     extra_expenses = ExtraExpense.query.all()
-    return jsonify(extra_expenses), 200
+
+    extra_expense_schema = ExtraExpenseSchema(many=True)
+
+    return jsonify({"extra_expenses": extra_expense_schema.dump(extra_expenses)}), 200
 
 
 @bp_extra_expense.route("/register", methods=["POST"])
