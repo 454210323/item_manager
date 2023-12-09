@@ -1,6 +1,7 @@
 import decimal
 from database import db
 from marshmallow import Schema, fields
+import os
 
 
 class ExtraExpense(db.Model):
@@ -10,6 +11,7 @@ class ExtraExpense(db.Model):
     expense_type = db.Column(db.String, nullable=False)
     expense = db.Column(db.Numeric, nullable=False)
     expense_content = db.Column(db.String, nullable=True)
+    expense_date = db.Column(db.Date, nullable=True)
 
     def __repr__(self):
         return f"<ExtraExpense {self.id} {self.expense_type}>"
@@ -20,6 +22,7 @@ class ExtraExpense(db.Model):
             "expense_type": self.expense_type,
             "expense": self.expense,
             "expense_content": self.expense_content,
+            "expense_date": self.expense_date,
         }
 
 
@@ -28,3 +31,4 @@ class ExtraExpenseSchema(Schema):
     expense_type = fields.Str()
     expense = fields.Decimal()
     expense_content = fields.Str()
+    expense_date = fields.Date()

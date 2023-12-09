@@ -30,5 +30,5 @@ class API {
   // Register Extra Expenditure
   static const REGISTER_EXTRA_EXPENSE = "${BASE_URL}ExtraExpense/register";
   // Get Extra Expenditure
-  static const GET_EXTRA_EXPENSE = "${BASE_URL}ExtraExpense/register";
+  static const GET_EXTRA_EXPENSE = "${BASE_URL}ExtraExpense/get";
 }

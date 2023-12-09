@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 import '../models/item_info.dart';
-import '../widgets/register_new_item_button.dart';
+import 'register_item_page.dart';
 
 class ItemPage extends StatefulWidget {
   const ItemPage({super.key});
@@ -59,7 +59,18 @@ class _ItemPageState extends State<ItemPage> {
         child: Center(
           child: Column(
             children: [
-              const RegisterNewItemButton(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterItemPage()),
+                    );
+                  },
+                  child: const Text('Register New Item'),
+                ),
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,

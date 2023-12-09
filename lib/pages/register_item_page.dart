@@ -6,9 +6,13 @@ class RegisterItemPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(8.0),
-      child: RegisterItemForm(),
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Register New Item'),
+        ),
+        body: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: RegisterItemForm(),
+        ));
   }
 }

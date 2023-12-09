@@ -47,78 +47,73 @@ class _RegisterItemFormState extends State<RegisterItemForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register New Item'),
-      ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    decoration: const InputDecoration(labelText: 'Item Code'),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp("[a-z]|[0-9]")),
-                    ],
-                    onSaved: (value) {
-                      _itemCode = value!;
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a item code';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    _itemCode = await BarcodeScanner.scanBarcode();
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  decoration: const InputDecoration(labelText: 'Item Code'),
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp("[a-z]|[0-9]")),
+                  ],
+                  onSaved: (value) {
+                    _itemCode = value!;
                   },
-                  child: const Text('Scan'),
-                )
-              ],
-            ),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Item Name'),
-              onSaved: (value) {
-                _itemName = value!;
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter item name';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Item Price'),
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly,
-              ],
-              onSaved: (value) {
-                _price = int.parse(value!);
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter item price';
-                }
-                return null;
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Register'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a item code';
+                    }
+                    return null;
+                  },
+                ),
               ),
+              ElevatedButton(
+                onPressed: () async {
+                  _itemCode = await BarcodeScanner.scanBarcode();
+                },
+                child: const Text('Scan'),
+              )
+            ],
+          ),
+          TextFormField(
+            decoration: const InputDecoration(labelText: 'Item Name'),
+            onSaved: (value) {
+              _itemName = value!;
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter item name';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            decoration: const InputDecoration(labelText: 'Item Price'),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            onSaved: (value) {
+              _price = int.parse(value!);
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter item price';
+              }
+              return null;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ElevatedButton(
+              onPressed: _submitForm,
+              child: const Text('Register'),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
