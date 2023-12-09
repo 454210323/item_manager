@@ -18,8 +18,8 @@ class RegisterExtraExpensePage extends StatefulWidget {
 
 class _RegisterExtraExpensePageState extends State<RegisterExtraExpensePage> {
   String _selectedType = "";
-  TextEditingController _amountController = TextEditingController();
-  TextEditingController _contentController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
   List<String> _types = [];
