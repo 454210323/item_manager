@@ -7,7 +7,6 @@ import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 import '../widgets/dynamic_data_table.dart';
-import '../widgets/travel_expenses.dart';
 
 class ExtraExpensePage extends StatefulWidget {
   const ExtraExpensePage({super.key});
@@ -17,23 +16,9 @@ class ExtraExpensePage extends StatefulWidget {
 }
 
 class _ExtraExpensePageState extends State<ExtraExpensePage> {
-  // List<bool> _isSelected = [true, false, false];
   int currentIndex = 0;
 
   List<ExtraExpense> _extraExpenses = [];
-
-  Widget _buildContent() {
-    switch (currentIndex) {
-      case 0:
-        return const Center(child: Text('content 1'));
-      case 1:
-        return const Center(child: Text('content 2'));
-      case 2:
-        return const Center(child: TravelExpenses());
-      default:
-        return const Center(child: Text('content 1'));
-    }
-  }
 
   @override
   void initState() {
@@ -63,31 +48,6 @@ class _ExtraExpensePageState extends State<ExtraExpensePage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            // ToggleButtons(
-            //   isSelected: _isSelected,
-            //   children: const <Widget>[
-            //     Icon(
-            //       Icons.currency_yen,
-            //     ),
-            //     Icon(
-            //       Icons.directions_car,
-            //     ),
-            //     Icon(
-            //       Icons.train,
-            //     ),
-            //   ],
-            //   onPressed: (int index) {
-            //     setState(() {
-            //       for (int buttonIndex = 0;
-            //           buttonIndex < _isSelected.length;
-            //           buttonIndex++) {
-            //         _isSelected[buttonIndex] = buttonIndex == index;
-            //       }
-            //       currentIndex = index;
-            //     });
-            //   },
-            // ),
-            // Expanded(child: _buildContent()),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
@@ -110,10 +70,10 @@ class _ExtraExpensePageState extends State<ExtraExpensePage> {
                         child: DynamicDataTable(
                           data: _extraExpenses,
                           visibleColumns: const [
-                            'expenseType',
+                            'type',
                             'expense',
-                            'expenseContent',
-                            'expenseDate'
+                            'content',
+                            'date'
                           ],
                         ),
                       ),

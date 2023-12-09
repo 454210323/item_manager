@@ -4,20 +4,45 @@ from models.dtos.extra_expense import ExtraExpense, ExtraExpenseSchema
 from database import db
 import os
 
+from models.dtos.extra_expense_type import ExtraExpenseType
+
 
 bp_extra_expense = Blueprint("extra_expense", __name__, url_prefix="/ExtraExpense")
 
 
-@bp_extra_expense.route("/get")
+@bp_extra_expense.route("/getExtraExpenseTypes")
+def _get_extra_expense_type():
+    extra_expense_types = ExtraExpenseType.query.all()
+    return (
+        jsonify(
+            {
+                "extra_expense_types": [
+                    extra_expense_type.to_dict()
+                    for extra_expense_type in extra_expense_types
+                ]
+            },
+        ),
+        200,
+    )
+
+
+@bp_extra_expense.route("/getAllExtraExpense")
 def _get_extra_expense():
     extra_expenses = ExtraExpense.query.order_by(ExtraExpense.expense_date).all()
 
-    extra_expense_schema = ExtraExpenseSchema(many=True)
+    return (
+        jsonify(
+            {
+                "extra_expenses": [
+                    extra_expense.to_dict() for extra_expense in extra_expenses
+                ]
+            }
+        ),
+        200,
+    )
 
-    return jsonify({"extra_expenses": extra_expense_schema.dump(extra_expenses)}), 200
 
-
-@bp_extra_expense.route("/register", methods=["POST"])
+@bp_extra_expense.route("/registerExtraExpense", methods=["POST"])
 def _register_extra_expense():
     data = request.json
 

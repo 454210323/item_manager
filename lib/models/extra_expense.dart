@@ -29,10 +29,10 @@ class ExtraExpense extends TableItem {
   Map<String, dynamic> toTableData() {
     return {
       'id': id,
-      'expenseType': expenseType,
+      'type': expenseType,
       'expense': expense,
-      'expenseContent': expenseContent,
-      'expenseDate': DateFormat('yyyy-MM-dd').format(expenseDate),
+      'content': expenseContent,
+      'date': DateFormat('yyyy-MM-dd').format(expenseDate),
     };
   }
 }

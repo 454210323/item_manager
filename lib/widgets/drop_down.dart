@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 class CustomDropdownButton extends StatefulWidget {
+  final String hint;
   final List<String> options;
   final void Function(String) onSelected;
   final String? initialValue;
 
   const CustomDropdownButton({
     super.key,
+    required this.hint,
     required this.options,
     required this.onSelected,
     this.initialValue,
@@ -28,6 +30,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
+      hint: Text(widget.hint),
       value: _selectedValue,
       onChanged: (String? newValue) {
         if (newValue != null) {

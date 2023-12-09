@@ -27,8 +27,13 @@ class API {
   static const REGISTER_ITEM = "${BASE_URL}RegisterItem";
   // Stock Shipemnt List (GET)
   static const STOCK_SHIPMENT_INFOS = "${BASE_URL}StockShipmentInfos";
+
+  // Get Extra Expense Type
+  static const EXTRA_EXPENSE_TYPES =
+      "${BASE_URL}ExtraExpense/getExtraExpenseTypes";
   // Register Extra Expenditure
-  static const REGISTER_EXTRA_EXPENSE = "${BASE_URL}ExtraExpense/register";
+  static const REGISTER_EXTRA_EXPENSE =
+      "${BASE_URL}ExtraExpense/registerExtraExpense";
   // Get Extra Expenditure
-  static const GET_EXTRA_EXPENSE = "${BASE_URL}ExtraExpense/get";
+  static const GET_EXTRA_EXPENSE = "${BASE_URL}ExtraExpense/getAllExtraExpense";
 }

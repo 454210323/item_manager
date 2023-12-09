@@ -95,11 +95,13 @@ class _SearchFormState extends State<SearchForm> {
             children: [
               const Text("Item Type"),
               CustomDropdownButton(
+                hint: "Type",
                 options: _itemTypes,
                 onSelected: _setSelectedItemType,
               ),
               const Text("Item Series"),
               CustomDropdownButton(
+                hint: "Series",
                 options: _itemSeries,
                 onSelected: _setSelectedItemSeries,
               ),

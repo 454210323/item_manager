@@ -1,7 +1,7 @@
 import decimal
 from database import db
 from marshmallow import Schema, fields
-import os
+from datetime import datetime
 
 
 class ExtraExpense(db.Model):
@@ -22,7 +22,7 @@ class ExtraExpense(db.Model):
             "expense_type": self.expense_type,
             "expense": self.expense,
             "expense_content": self.expense_content,
-            "expense_date": self.expense_date,
+            "expense_date": self.expense_date.isoformat(),
         }
 
 
