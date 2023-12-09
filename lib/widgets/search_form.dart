@@ -16,19 +16,11 @@ class SearchForm extends StatefulWidget {
 }
 
 class _SearchFormState extends State<SearchForm> {
-  final _formKey = GlobalKey<FormState>();
-  String _itemCode = '';
+  final TextEditingController _itemCodeController = TextEditingController();
   String _selectedItemType = '';
   String _selectedItemSeries = '';
   List<String> _itemTypes = [];
   List<String> _itemSeries = [];
-
-  void _onSearchPressed() {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      widget.onSearch(_itemCode, _selectedItemType, _selectedItemSeries);
-    }
-  }
 
   @override
   void initState() {
@@ -67,54 +59,57 @@ class _SearchFormState extends State<SearchForm> {
     });
   }
 
+  void _onSearchPressed() {
+    widget.onSearch(
+      _itemCodeController.text,
+      _selectedItemType,
+      _selectedItemSeries,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                    decoration: const InputDecoration(labelText: 'Item Code'),
-                    onSaved: ((value) => _itemCode = value!)),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  String barcodeResult = await BarcodeScanner.scanBarcode();
-                  setState(() {
-                    _itemCode = barcodeResult;
-                  });
-                },
-                child: const Text('Scan'),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              const Text("Item Type"),
-              CustomDropdownButton(
-                hint: "Type",
-                options: _itemTypes,
-                onSelected: _setSelectedItemType,
-              ),
-              const Text("Item Series"),
-              CustomDropdownButton(
-                hint: "Series",
-                options: _itemSeries,
-                onSelected: _setSelectedItemSeries,
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              ElevatedButton(
-                  onPressed: _onSearchPressed, child: const Text("search"))
-            ],
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+                child: TextField(
+              decoration: const InputDecoration(labelText: 'Item Code'),
+              controller: _itemCodeController,
+            )),
+            ElevatedButton(
+              onPressed: () async {
+                String barcodeResult = await BarcodeScanner.scanBarcode();
+                if (!mounted) return;
+                setState(() {
+                  _itemCodeController.text = barcodeResult;
+                });
+              },
+              child: const Text('Scan'),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("Item Type"),
+            CustomDropdownButton(
+              hint: "Type",
+              options: _itemTypes,
+              onSelected: _setSelectedItemType,
+            ),
+            const Text("Item Series"),
+            CustomDropdownButton(
+              hint: "Series",
+              options: _itemSeries,
+              onSelected: _setSelectedItemSeries,
+            ),
+          ],
+        ),
+        ElevatedButton(
+            onPressed: _onSearchPressed, child: const Text("Search")),
+      ],
     );
   }
 }
