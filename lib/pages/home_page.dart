@@ -5,8 +5,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("This is the Home Page"),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Image.asset('assets/home.gif'),
     );
   }
 }
