@@ -1,10 +1,10 @@
-import 'item_info.dart';
+import 'item.dart';
 
-class StockShipmentInfo extends ItemInfo {
+class StockShipment extends Item {
   final int stockQuantity;
   final int shipmentQuantity;
 
-  StockShipmentInfo({
+  StockShipment({
     required super.itemCode,
     required super.itemName,
     required super.type,
@@ -14,8 +14,8 @@ class StockShipmentInfo extends ItemInfo {
     required this.shipmentQuantity,
   });
 
-  factory StockShipmentInfo.fromJson(Map<String, dynamic> json) {
-    return StockShipmentInfo(
+  factory StockShipment.fromJson(Map<String, dynamic> json) {
+    return StockShipment(
       itemCode: json['item_code'],
       itemName: json['item_name'],
       type: json['item_type'],

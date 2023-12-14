@@ -8,3 +8,12 @@ class Item(db.Model):
     item_type = db.Column(db.String(100))
     series = db.Column(db.String(100))
     price = db.Column(db.Numeric(10, 0))
+
+    def to_dict(self):
+        return {
+            "item_code": self.item_code,
+            "item_name": self.item_name,
+            "item_type": self.item_type,
+            "series": self.series,
+            "price": self.price,
+        }

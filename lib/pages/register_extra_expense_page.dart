@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/widgets/drop_down.dart';
@@ -18,7 +19,7 @@ class RegisterExtraExpensePage extends StatefulWidget {
 
 class _RegisterExtraExpensePageState extends State<RegisterExtraExpensePage> {
   String _selectedType = "";
-  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _expenseController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
@@ -42,15 +43,23 @@ class _RegisterExtraExpensePageState extends State<RegisterExtraExpensePage> {
     }
   }
 
-  void submitData() async {
+  Future<void> _submitData() async {
+    if (_expenseController.text.isEmpty || _contentController.text.isEmpty) {
+      showSnackBar(context, 'Please fill in all fields');
+    }
+    if (Decimal.tryParse(_expenseController.text) == null) {
+      showSnackBar(context, 'Please enter a valid price');
+      return;
+    }
+
     final response = await http.post(
-      Uri.parse(API.REGISTER_EXTRA_EXPENSE),
+      Uri.parse(API.EXTRA_EXPENSE),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(<String, dynamic>{
-        'type': _selectedType,
-        'amount': _amountController.text,
+        'expenseType': _selectedType,
+        'expense': _expenseController.text,
         'content': _contentController.text,
-        'date': _selectedDate.toIso8601String(),
+        'expenseDate': _selectedDate.toIso8601String(),
       }),
     );
 
@@ -80,7 +89,7 @@ class _RegisterExtraExpensePageState extends State<RegisterExtraExpensePage> {
             CustomDropdownButton(
                 hint: "Type", options: _types, onSelected: _setSelectedType),
             TextField(
-              controller: _amountController,
+              controller: _expenseController,
               decoration: const InputDecoration(
                 labelText: 'Expense',
               ),
@@ -96,10 +105,10 @@ class _RegisterExtraExpensePageState extends State<RegisterExtraExpensePage> {
             Row(
               children: [
                 Text(
-                  'Selected Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
+                  'Expense Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
                 ),
                 ElevatedButton(
-                  child: const Text('Expense Date'),
+                  child: const Text('Select Date'),
                   onPressed: () async {
                     final DateTime? picked = await showDatePicker(
                       context: context,
@@ -118,7 +127,7 @@ class _RegisterExtraExpensePageState extends State<RegisterExtraExpensePage> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: submitData,
+              onPressed: _submitData,
               child: const Text('Register'),
             ),
           ],

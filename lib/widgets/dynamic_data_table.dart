@@ -6,12 +6,14 @@ class DynamicDataTable extends StatefulWidget {
   final List<TableItem> data;
   final int interactiveColumnIndex;
   final List<String> visibleColumns;
+  final List<String> editableColumns;
 
-  DynamicDataTable({
+  const DynamicDataTable({
     super.key,
     required this.data,
     this.visibleColumns = const [],
     this.interactiveColumnIndex = 0,
+    this.editableColumns = const [],
   });
 
   @override
@@ -76,7 +78,14 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
           .toList();
 
       var cells = filterdData.asMap().entries.map((e) {
-        if (e.key == widget.interactiveColumnIndex) {
+        if (widget.editableColumns.contains(data.keys.elementAt(e.key))) {
+          return DataCell(TextField(
+            controller: TextEditingController(text: e.value.toString()),
+            onSubmitted: (newValue) {
+              // TODO: 处理编辑后的值
+            },
+          ));
+        } else if (e.key == widget.interactiveColumnIndex) {
           return DataCell(
             Text(e.value.toString()),
             onTap: () {
@@ -109,6 +118,7 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
 
   DataTable _itemTable() {
     return DataTable(
+      columnSpacing: 30,
       columns: _itemTableColumns(),
       rows: _itemTableRows(),
       sortColumnIndex: _currentSortColumn,

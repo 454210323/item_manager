@@ -1,21 +1,22 @@
+import 'package:decimal/decimal.dart';
 import 'package:flutter_application_1/models/table_item.dart';
 
-class ItemInfo extends TableItem {
+class Item extends TableItem {
   final String itemCode;
   final String itemName;
   final String type;
   final String series;
-  final int price;
+  final Decimal price;
 
-  ItemInfo(
+  Item(
       {required this.itemCode,
       required this.itemName,
       required this.type,
       required this.series,
       required this.price});
 
-  factory ItemInfo.fromJson(Map<String, dynamic> json) {
-    return ItemInfo(
+  factory Item.fromJson(Map<String, dynamic> json) {
+    return Item(
       itemCode: json['item_code'],
       itemName: json['item_name'],
       type: json['item_type'],

@@ -5,18 +5,18 @@ import 'package:flutter_application_1/widgets/search_form.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants.dart';
-import '../models/stock_info.dart';
+import '../models/stock_shipment.dart';
 import '../widgets/dynamic_data_table.dart';
 
-class StockShipmentPage extends StatefulWidget {
-  const StockShipmentPage({super.key});
+class StocksPage extends StatefulWidget {
+  const StocksPage({super.key});
 
   @override
-  _StockShipmentPageState createState() => _StockShipmentPageState();
+  _StocksPageState createState() => _StocksPageState();
 }
 
-class _StockShipmentPageState extends State<StockShipmentPage> {
-  List<StockShipmentInfo> _stockShipmentInfos = [];
+class _StocksPageState extends State<StocksPage> {
+  List<StockShipment> _StockShipments = [];
 
   Future<void> _onSearch(
       String itemCode, String itemType, String itemSerise) async {
@@ -32,8 +32,8 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
       var data = json.decode(response.body)['stock_shipment_infos'];
 
       setState(() {
-        _stockShipmentInfos = data
-            .map<StockShipmentInfo>((json) => StockShipmentInfo.fromJson(json))
+        _StockShipments = data
+            .map<StockShipment>((json) => StockShipment.fromJson(json))
             .toList();
       });
     }
@@ -41,11 +41,11 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
 
   List<String> getVisiableColumns(double screenWidth) {
     if (screenWidth < 800) {
-      return StockShipmentInfo.columnsForSmallScreen;
+      return StockShipment.columnsForSmallScreen;
     } else if (screenWidth < 1600) {
-      return StockShipmentInfo.columnsForMediumScreen;
+      return StockShipment.columnsForMediumScreen;
     } else {
-      return StockShipmentInfo.columnsForLargeScreen;
+      return StockShipment.columnsForLargeScreen;
     }
   }
 
@@ -63,12 +63,12 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
             Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: _stockShipmentInfos.isEmpty
+                child: _StockShipments.isEmpty
                     ? const Text("no data")
                     : SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: DynamicDataTable(
-                          data: _stockShipmentInfos,
+                          data: _StockShipments,
                           visibleColumns: getVisiableColumns(
                               MediaQuery.of(context).size.width),
                         ),

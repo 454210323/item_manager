@@ -27,7 +27,7 @@ class _ExtraExpensePageState extends State<ExtraExpensePage> {
   }
 
   Future<void> _fetchData() async {
-    var url = Uri.parse(API.GET_EXTRA_EXPENSE);
+    var url = Uri.parse(API.EXTRA_EXPENSE_ALL);
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -60,24 +60,22 @@ class _ExtraExpensePageState extends State<ExtraExpensePage> {
                 child: const Text('Register New ExtraExpense'),
               ),
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: _extraExpenses.isEmpty
-                    ? const CircularProgressIndicator()
-                    : SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: DynamicDataTable(
-                          data: _extraExpenses,
-                          visibleColumns: const [
-                            'type',
-                            'expense',
-                            'content',
-                            'date'
-                          ],
-                        ),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: _extraExpenses.isEmpty
+                  ? const CircularProgressIndicator()
+                  : SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: DynamicDataTable(
+                        data: _extraExpenses,
+                        visibleColumns: const [
+                          'type',
+                          'expense',
+                          'content',
+                          'date'
+                        ],
                       ),
-              ),
+                    ),
             ),
           ],
         ),

@@ -26,7 +26,7 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
       showSnackBar(context, 'Please fill in all fields');
       return;
     }
-    if (double.tryParse(_priceController.text) == null) {
+    if (Decimal.tryParse(_priceController.text) == null) {
       showSnackBar(context, 'Please enter a valid price');
       return;
     }
@@ -42,7 +42,7 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
         body: jsonEncode(<String, dynamic>{
           'itemCode': _itemCodeController.text,
           'itemName': _itemNameController.text,
-          'price': Decimal.parse(_priceController.text), // 确保价格被转换为数字
+          'price': Decimal.parse(_priceController.text),
         }),
       );
 

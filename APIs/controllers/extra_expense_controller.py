@@ -10,7 +10,7 @@ from models.dtos.extra_expense_type import ExtraExpenseType
 bp_extra_expense = Blueprint("extra_expense", __name__, url_prefix="/ExtraExpense")
 
 
-@bp_extra_expense.route("/getExtraExpenseTypes")
+@bp_extra_expense.route("/ExtraExpenseType")
 def _get_extra_expense_type():
     extra_expense_types = ExtraExpenseType.query.all()
     return (
@@ -26,8 +26,8 @@ def _get_extra_expense_type():
     )
 
 
-@bp_extra_expense.route("/getAllExtraExpense")
-def _get_extra_expense():
+@bp_extra_expense.route("/ExtraExpense/all")
+def _get_all_extra_expense():
     extra_expenses = ExtraExpense.query.order_by(ExtraExpense.expense_date).all()
 
     return (
@@ -42,16 +42,16 @@ def _get_extra_expense():
     )
 
 
-@bp_extra_expense.route("/registerExtraExpense", methods=["POST"])
+@bp_extra_expense.route("/ExtraExpense", methods=["POST"])
 def _register_extra_expense():
     data = request.json
 
     new_expense = ExtraExpense(
-        expense_type=data["expenseType"],  # 替换为相应的值
-        expense=data["expense"],  # 替换为相应的数值
-        expense_content=data["content"],  # 替换为相应的内容，如果有的话
+        expense_type=data["expenseType"],
+        expense=data["expense"],
+        expense_content=data["content"],
+        expense_date=data["expenseDate"],
     )
-    # 添加到会话并提交
     db.session.add(new_expense)
     db.session.commit()
     return jsonify("success"), 200

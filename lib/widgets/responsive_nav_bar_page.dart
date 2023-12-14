@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/register_stock_page.dart';
 
 import '../constants.dart';
-import '../pages/about_page.dart';
 import '../pages/extra_expense_page.dart';
 import '../pages/home_page.dart';
 import '../pages/item_page.dart';
-import '../pages/stock_shipment_page.dart';
+import '../pages/stocks_page.dart';
+import 'expansion_tile.dart';
+import 'menu_item.dart';
 import 'profile_icon.dart';
 
 class ResponsiveNavBarPage extends StatefulWidget {
@@ -20,7 +22,7 @@ class ResponsiveNavBarPage extends StatefulWidget {
 
 class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _selectedMenuItem = 'Home';
+  String _selectedMenuItem = ScreenConst.HOME;
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -69,19 +71,27 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
 
   Widget _drawer() => Drawer(
         child: ListView(
-          children: AppConst.menuItems
-              .map((item) => ListTile(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      setState(() {
-                        _selectedMenuItem = item;
-                      });
-                    },
-                    title: Text(item),
-                  ))
-              .toList(),
+          children: AppConst.menuItems.map(_buildMenuItem).toList(),
         ),
       );
+
+  Widget _buildMenuItem(MenuItem item) {
+    if (item.subItems != null && item.subItems!.isNotEmpty) {
+      return CustomExpansionTile(
+        title: item.title,
+        children: item.subItems!.map(_buildMenuItem).toList(),
+      );
+    } else {
+      return ListTile(
+          title: Text(item.title),
+          onTap: () {
+            Navigator.of(context).pop();
+            setState(() {
+              _selectedMenuItem = item.title;
+            });
+          });
+    }
+  }
 
   Widget _navBarItems() => Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -91,13 +101,13 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
               (item) => InkWell(
                 onTap: () {
                   setState(() {
-                    _selectedMenuItem = item;
+                    _selectedMenuItem = item.title;
                   });
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 24.0, horizontal: 16),
-                  child: Text(item, style: const TextStyle(fontSize: 18)),
+                  child: Text(item.title, style: const TextStyle(fontSize: 18)),
                 ),
               ),
             )
@@ -107,12 +117,16 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
 
 Widget _currentPageContent(selectedMenuItem) {
   switch (selectedMenuItem) {
-    case ScreenConst.ABOUT:
-      return const AboutPage();
+    case ScreenConst.HOME:
+      return const HomePage();
     case ScreenConst.ITEMS:
       return const ItemPage();
-    case ScreenConst.STOCK_SHIPMENT:
-      return const StockShipmentPage();
+    case ScreenConst.STOCKS:
+      return const StocksPage();
+    case ScreenConst.REGISTER_STOCK:
+      return const RegisterStockPage();
+    case ScreenConst.REGISTER_SHIPMENT:
+      return const Text('todo');
     case ScreenConst.EXTRA_EXPENSE:
       return const ExtraExpensePage();
     default:

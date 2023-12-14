@@ -5,7 +5,7 @@ import 'package:flutter_application_1/widgets/dynamic_data_table.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants.dart';
-import '../models/item_info.dart';
+import '../models/item.dart';
 import 'register_item_page.dart';
 
 class ItemPage extends StatefulWidget {
@@ -16,7 +16,7 @@ class ItemPage extends StatefulWidget {
 }
 
 class _ItemPageState extends State<ItemPage> {
-  List<ItemInfo> _items = [];
+  List<Item> _items = [];
 
   @override
   void initState() {
@@ -25,13 +25,13 @@ class _ItemPageState extends State<ItemPage> {
   }
 
   Future<void> fetchData() async {
-    var url = Uri.parse(API.ITEM_INFOS);
+    var url = Uri.parse(API.ITEM);
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body)['item_infos'];
       setState(() {
-        _items = data.map<ItemInfo>((json) => ItemInfo.fromJson(json)).toList();
+        _items = data.map<Item>((json) => Item.fromJson(json)).toList();
       });
     } else {
       // Handle the error
@@ -40,11 +40,11 @@ class _ItemPageState extends State<ItemPage> {
 
   List<String> getVisiableColumns(double screenWidth) {
     if (screenWidth < 800) {
-      return ItemInfo.columnsForSmallScreen;
+      return Item.columnsForSmallScreen;
     } else if (screenWidth < 1600) {
-      return ItemInfo.columnsForMediumScreen;
+      return Item.columnsForMediumScreen;
     } else {
-      return ItemInfo.columnsForLargeScreen;
+      return Item.columnsForLargeScreen;
     }
   }
 
