@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.33, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.27, for Win64 (x86_64)
 --
 -- Host: localhost    Database: dev
 -- ------------------------------------------------------
--- Server version	8.0.33
+-- Server version	8.0.27
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -43,6 +43,30 @@ INSERT INTO `extra_expense` VALUES (1,'电车',600,'一日券','2023-12-08');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `extra_expense_type`
+--
+
+DROP TABLE IF EXISTS `extra_expense_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `extra_expense_type` (
+  `id` int NOT NULL,
+  `expense_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `extra_expense_type`
+--
+
+LOCK TABLES `extra_expense_type` WRITE;
+/*!40000 ALTER TABLE `extra_expense_type` DISABLE KEYS */;
+INSERT INTO `extra_expense_type` VALUES (1,'电车'),(2,'租车'),(3,'高速费');
+/*!40000 ALTER TABLE `extra_expense_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `item`
 --
 
@@ -65,6 +89,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
+INSERT INTO `item` VALUES ('123456789','test','type','series',1000);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -81,4 +106,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-09 12:42:54
+-- Dump completed on 2023-12-14 18:31:33
