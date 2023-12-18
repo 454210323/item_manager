@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from models.dtos.item import Item
 from database import db
 
-bp_item = Blueprint("item", __name__, url_prefix="Item")
+bp_item = Blueprint("item", __name__, url_prefix="/Item")
 
 
 @bp_item.route("/Item/all")

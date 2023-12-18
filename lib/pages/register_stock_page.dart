@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import '../constants.dart';
 import '../models/stock.dart';
 import '../widgets/barcode_scanner.dart';
+import '../widgets/stock_data_table.dart';
 
 class RegisterStockPage extends StatefulWidget {
   const RegisterStockPage({super.key});
@@ -20,18 +21,29 @@ class RegisterStockPage extends StatefulWidget {
 
 class _RegisterStockPageState extends State<RegisterStockPage> {
   TextEditingController _itemCodeController = TextEditingController();
-  TextEditingController _priceController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
   List<Stock> _preStocks = [];
 
-  void _setData(List<Stock> stocks) {
+  void _onChanged(List<Stock> stocks) {
     setState(() {
       _preStocks = stocks;
     });
   }
 
-  void _submitData() async {}
+  void _submitData() async {
+    if (_preStocks.isEmpty) {
+      showSnackBar(context, 'Please add List');
+    }
+    final response = await http.post(
+      Uri.parse(API.STOCK),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(<String, dynamic>{
+        'purchaseDate': _selectedDate.toIso8601String(),
+        'stocks': _preStocks.map((e) => e.toString()).toList(),
+      }),
+    );
+  }
 
   Future<void> _fetchItem() async {
     var url = Uri.parse(API.ITEM).replace(queryParameters: {
@@ -39,37 +51,36 @@ class _RegisterStockPageState extends State<RegisterStockPage> {
     });
     try {
       var response = await http.get(url);
-
       if (response.statusCode == 200) {
-        Item item = json.decode(response.body)['item'];
+        var data = json.decode(response.body)['item'];
+        Item item = Item.fromJson(data);
         if (_preStocks.any((element) => element.itemCode == item.itemCode)) {
-          setState(() {
-            _preStocks = _preStocks.map((e) {
-              if (e.itemCode == item.itemCode) {
-                return Stock(
-                    itemCode: e.itemCode,
-                    price: e.price,
-                    quantity: e.quantity + 1,
-                    purchaseDate: _selectedDate);
-              } else {
-                return e;
-              }
-            }).toList();
-          });
+          _preStocks = _preStocks.map((e) {
+            if (e.itemCode == item.itemCode) {
+              return Stock(
+                  itemCode: e.itemCode,
+                  itemName: e.itemName,
+                  price: e.price,
+                  quantity: e.quantity + 1);
+            } else {
+              return e;
+            }
+          }).toList();
         } else {
-          setState(() {
-            _preStocks.add(Stock(
-                itemCode: item.itemCode,
-                price: item.price,
-                quantity: 1,
-                purchaseDate: _selectedDate));
-          });
+          _preStocks.add(Stock(
+              itemCode: item.itemCode,
+              itemName: item.itemName,
+              price: item.price,
+              quantity: 1));
         }
+        setState(() {
+          _preStocks = _preStocks;
+        });
       } else {
         showSnackBar(context, 'Cant find any item');
       }
     } catch (e) {
-      print('Error occurred: $e');
+      showSnackBar(context, 'Error occurred: $e');
     }
   }
 
@@ -97,6 +108,7 @@ class _RegisterStockPageState extends State<RegisterStockPage> {
                   ),
                   ElevatedButton(
                       onPressed: _fetchItem, child: const Text('Search')),
+                  const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () async {
                       String result = await BarcodeScanner.scanBarcode();
@@ -104,14 +116,11 @@ class _RegisterStockPageState extends State<RegisterStockPage> {
                       setState(() {
                         _itemCodeController.text = result;
                       });
+                      _fetchItem();
                     },
                     child: const Text('Scan'),
                   )
                 ],
-              ),
-              TextField(
-                controller: _priceController,
-                decoration: const InputDecoration(labelText: "Price"),
               ),
               const SizedBox(height: 20),
               Row(
@@ -135,13 +144,25 @@ class _RegisterStockPageState extends State<RegisterStockPage> {
                       }
                     },
                   ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: _submitData,
+                    child: const Text('Register'),
+                  ),
                 ],
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _submitData,
-                child: const Text('Register'),
-              ),
+              Expanded(
+                  child: SingleChildScrollView(
+                child: _preStocks.isEmpty
+                    ? Text('no item')
+                    : SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: StockDataTable(
+                          data: _preStocks,
+                          onChanged: _onChanged,
+                        ),
+                      ),
+              ))
             ],
           ),
         ));

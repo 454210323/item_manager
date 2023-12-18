@@ -21,7 +21,7 @@ class Item extends TableItem {
       itemName: json['item_name'],
       type: json['item_type'],
       series: json['series'],
-      price: json['price'],
+      price: Decimal.parse(json['price']),
     );
   }
   @override
