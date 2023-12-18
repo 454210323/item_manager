@@ -119,6 +119,10 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    return _itemTable();
+    if (widget.data.isEmpty) {
+      return const Text('No data');
+    } else {
+      return _itemTable();
+    }
   }
 }

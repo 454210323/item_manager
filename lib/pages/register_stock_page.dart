@@ -20,7 +20,7 @@ class RegisterStockPage extends StatefulWidget {
 }
 
 class _RegisterStockPageState extends State<RegisterStockPage> {
-  TextEditingController _itemCodeController = TextEditingController();
+  final TextEditingController _itemCodeController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
   List<Stock> _preStocks = [];
@@ -33,16 +33,25 @@ class _RegisterStockPageState extends State<RegisterStockPage> {
 
   void _submitData() async {
     if (_preStocks.isEmpty) {
-      showSnackBar(context, 'Please add List');
+      showSnackBar(context, 'Please add List', 'error');
     }
-    final response = await http.post(
-      Uri.parse(API.STOCK),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(<String, dynamic>{
-        'purchaseDate': _selectedDate.toIso8601String(),
-        'stocks': _preStocks.map((e) => e.toString()).toList(),
-      }),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(API.STOCK),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(<String, dynamic>{
+          'purchaseDate': _selectedDate.toIso8601String(),
+          'stocks': _preStocks.map((e) => e.toJson()).toList(),
+        }),
+      );
+      if (response.statusCode == 200) {
+        showSnackBar(context, 'Registration successful', 'success');
+      } else {
+        showSnackBar(context, 'Registration failed', 'error');
+      }
+    } catch (e) {
+      showSnackBar(context, 'An error occurred: $e', 'error');
+    }
   }
 
   Future<void> _fetchItem() async {
@@ -77,11 +86,19 @@ class _RegisterStockPageState extends State<RegisterStockPage> {
           _preStocks = _preStocks;
         });
       } else {
-        showSnackBar(context, 'Cant find any item');
+        showSnackBar(context, 'Cant find any item', 'warning');
       }
     } catch (e) {
-      showSnackBar(context, 'Error occurred: $e');
+      showSnackBar(context, 'Error occurred: $e', 'error');
     }
+  }
+
+  void _clear() {
+    setState(() {
+      _selectedDate = DateTime.now();
+      _preStocks = [];
+      _itemCodeController.clear();
+    });
   }
 
   @override
@@ -123,31 +140,35 @@ class _RegisterStockPageState extends State<RegisterStockPage> {
                 ],
               ),
               const SizedBox(height: 20),
+              Text(
+                'Purchase Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
+              ),
+              ElevatedButton(
+                child: const Text('Select Date'),
+                onPressed: () async {
+                  final DateTime? picked = await showDatePicker(
+                    context: context,
+                    initialDate: _selectedDate,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2025),
+                  );
+                  if (picked != null && picked != _selectedDate) {
+                    setState(() {
+                      _selectedDate = picked;
+                    });
+                  }
+                },
+              ),
+              const SizedBox(width: 10),
               Row(
                 children: [
-                  Text(
-                    'Purchase Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
-                  ),
-                  ElevatedButton(
-                    child: const Text('Select Date'),
-                    onPressed: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: _selectedDate,
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2025),
-                      );
-                      if (picked != null && picked != _selectedDate) {
-                        setState(() {
-                          _selectedDate = picked;
-                        });
-                      }
-                    },
-                  ),
-                  const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: _submitData,
                     child: const Text('Register'),
+                  ),
+                  ElevatedButton(
+                    onPressed: _submitData,
+                    child: const Text('Clear'),
                   ),
                 ],
               ),

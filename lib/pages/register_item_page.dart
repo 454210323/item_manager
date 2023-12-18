@@ -23,11 +23,11 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
 
   Future<void> _submitData() async {
     if (_itemNameController.text.isEmpty || _priceController.text.isEmpty) {
-      showSnackBar(context, 'Please fill in all fields');
+      showSnackBar(context, 'Please fill in all fields', 'error');
       return;
     }
     if (Decimal.tryParse(_priceController.text) == null) {
-      showSnackBar(context, 'Please enter a valid price');
+      showSnackBar(context, 'Please enter a valid price', 'error');
       return;
     }
     setState(() {
@@ -47,12 +47,12 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
       );
 
       if (response.statusCode == 200) {
-        showSnackBar(context, 'Registration successful');
+        showSnackBar(context, 'Registration successful', 'success');
       } else {
-        showSnackBar(context, 'Registration failed');
+        showSnackBar(context, 'Registration failed', 'error');
       }
     } catch (e) {
-      showSnackBar(context, 'An error occurred: $e');
+      showSnackBar(context, 'An error occurred: $e', 'error');
     } finally {
       setState(() {
         _isLoading = false;

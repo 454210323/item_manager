@@ -17,6 +17,15 @@ class Stock extends TableItem {
   @override
   Map<String, dynamic> toTableData() {
     return {
+      // 'itemCode': itemCode,
+      'itemName': itemName,
+      'price': price.toString(),
+      'quantity': quantity
+    };
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
       'itemCode': itemCode,
       'itemName': itemName,
       'price': price.toString(),

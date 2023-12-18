@@ -17,24 +17,35 @@ class ItemPage extends StatefulWidget {
 
 class _ItemPageState extends State<ItemPage> {
   List<Item> _items = [];
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    fetchData();
+    _fetchData();
   }
 
-  Future<void> fetchData() async {
-    var url = Uri.parse(API.ITEM);
-    var response = await http.get(url);
+  Future<void> _fetchData() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      var url = Uri.parse(API.ITEM);
+      var response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body)['item_infos'];
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body)['items'];
+        setState(() {
+          _items = data.map<Item>((json) => Item.fromJson(json)).toList();
+        });
+      } else {
+        // Handle the error
+      }
+    } catch (e) {
+    } finally {
       setState(() {
-        _items = data.map<Item>((json) => Item.fromJson(json)).toList();
+        _isLoading = false;
       });
-    } else {
-      // Handle the error
     }
   }
 
@@ -74,7 +85,7 @@ class _ItemPageState extends State<ItemPage> {
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
-                  child: _items.isEmpty
+                  child: _isLoading
                       ? const CircularProgressIndicator()
                       : SizedBox(
                           width: MediaQuery.of(context).size.width,

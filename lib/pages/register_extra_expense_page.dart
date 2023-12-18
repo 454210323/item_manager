@@ -45,28 +45,31 @@ class _RegisterExtraExpensePageState extends State<RegisterExtraExpensePage> {
 
   Future<void> _submitData() async {
     if (_expenseController.text.isEmpty || _contentController.text.isEmpty) {
-      showSnackBar(context, 'Please fill in all fields');
+      showSnackBar(context, 'Please fill in all fields', 'error');
     }
     if (Decimal.tryParse(_expenseController.text) == null) {
-      showSnackBar(context, 'Please enter a valid price');
+      showSnackBar(context, 'Please enter a valid price', 'error');
       return;
     }
+    try {
+      final response = await http.post(
+        Uri.parse(API.EXTRA_EXPENSE),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(<String, dynamic>{
+          'expenseType': _selectedType,
+          'expense': _expenseController.text,
+          'content': _contentController.text,
+          'expenseDate': _selectedDate.toIso8601String(),
+        }),
+      );
 
-    final response = await http.post(
-      Uri.parse(API.EXTRA_EXPENSE),
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode(<String, dynamic>{
-        'expenseType': _selectedType,
-        'expense': _expenseController.text,
-        'content': _contentController.text,
-        'expenseDate': _selectedDate.toIso8601String(),
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      showSnackBar(context, 'Registration successful');
-    } else {
-      showSnackBar(context, 'Registration failed');
+      if (response.statusCode == 200) {
+        showSnackBar(context, 'Registration successful', 'success');
+      } else {
+        showSnackBar(context, 'Registration failed', 'error');
+      }
+    } catch (e) {
+      showSnackBar(context, 'An error occurred: $e', 'error');
     }
   }
 

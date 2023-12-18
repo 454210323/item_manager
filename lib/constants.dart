@@ -25,7 +25,7 @@ class ScreenConst {
 }
 
 class API {
-  static const BASE_URL = "http://127.0.0.1:5000/";
+  static const BASE_URL = "http://192.168.0.133:5000/";
 
   // Item Base Url
   static const ITEM_BASE = "${BASE_URL}Item/";
@@ -34,7 +34,7 @@ class API {
   // Item Serises (GET)
   static const ITEM_SERIES = "${BASE_URL}ItemSeries";
   // Item Infos (GET)
-  static const ITEM = "${ITEM_BASE}Item";
+  static const ITEM = "${ITEM_BASE}Item/all";
   // Register New Item (POST)
   static const REGISTER_ITEM = "${BASE_URL}RegisterItem";
 
