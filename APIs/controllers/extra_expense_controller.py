@@ -2,7 +2,7 @@ from typing import List, Dict, Optional, Union, Any
 from flask import Blueprint, jsonify, request
 from models.dtos.extra_expense import ExtraExpense, ExtraExpenseSchema
 from database import db
-import os
+import logging
 
 from models.dtos.extra_expense_type import ExtraExpenseType
 
@@ -46,12 +46,16 @@ def _get_all_extra_expense():
 def _register_extra_expense():
     data = request.json
 
-    new_expense = ExtraExpense(
-        expense_type=data["expenseType"],
-        expense=data["expense"],
-        expense_content=data["content"],
-        expense_date=data["expenseDate"],
-    )
-    db.session.add(new_expense)
-    db.session.commit()
-    return jsonify("success"), 200
+    try:
+        new_expense = ExtraExpense(
+            expense_type=data["expenseType"],
+            expense=data["expense"],
+            expense_content=data["content"],
+            expense_date=data["expenseDate"],
+        )
+        db.session.add(new_expense)
+        db.session.commit()
+        return jsonify({"message": "Shipments added successfully"}), 200
+    except Exception as e:
+        logging.info(e)
+        return jsonify({"error": str(e)}), 500
