@@ -23,3 +23,22 @@ def _get_item_by_item_code():
         return jsonify({"item": item.to_dict()}), 200
     else:
         return jsonify({"item": ""}), 500
+
+
+@bp_item.route("/RegisterItem", methods=["POST"])
+def _register_item():
+    data = request.json
+    try:
+        new_item = Item(
+            item_code=data["itemCode"],
+            item_name=data["itemName"],
+            item_type=data["item_type"],
+            series=data["series"],
+            price=data["price"],
+        )
+        db.session.add(new_item)
+        db.session.commit()
+        return jsonify({"message": "Item added successfully"}), 200
+    except Exception as e:
+        logging.info(e)
+        return jsonify({"error": str(e)}), 500
