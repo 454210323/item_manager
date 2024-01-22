@@ -10,16 +10,18 @@ import 'package:http/http.dart' as http;
 import '../constants.dart';
 import '../models/stock.dart';
 import '../widgets/barcode_scanner.dart';
+import '../widgets/no_item_waring.dart';
 import '../widgets/stock_data_table.dart';
 
-class RegisterStockPage extends StatefulWidget {
-  const RegisterStockPage({super.key});
+class RegisterStockShipmentPage extends StatefulWidget {
+  const RegisterStockShipmentPage({super.key});
 
   @override
-  State<RegisterStockPage> createState() => _RegisterStockPageState();
+  State<RegisterStockShipmentPage> createState() =>
+      _RegisterStockShipmentPageState();
 }
 
-class _RegisterStockPageState extends State<RegisterStockPage> {
+class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
   final TextEditingController _itemCodeController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
@@ -61,32 +63,35 @@ class _RegisterStockPageState extends State<RegisterStockPage> {
     try {
       var response = await http.get(url);
       if (response.statusCode == 200) {
-        var data = json.decode(response.body)['item'];
-        Item item = Item.fromJson(data);
-        if (_preStocks.any((element) => element.itemCode == item.itemCode)) {
-          _preStocks = _preStocks.map((e) {
-            if (e.itemCode == item.itemCode) {
-              return Stock(
-                  itemCode: e.itemCode,
-                  itemName: e.itemName,
-                  price: e.price,
-                  quantity: e.quantity + 1);
-            } else {
-              return e;
-            }
-          }).toList();
+        if (json.decode(response.body)['status']) {
+          var data = json.decode(response.body)['item'];
+          Item item = Item.fromJson(data);
+          if (_preStocks.any((element) => element.itemCode == item.itemCode)) {
+            _preStocks = _preStocks.map((e) {
+              if (e.itemCode == item.itemCode) {
+                return Stock(
+                    itemCode: e.itemCode,
+                    itemName: e.itemName,
+                    price: e.price,
+                    quantity: e.quantity + 1);
+              } else {
+                return e;
+              }
+            }).toList();
+          } else {
+            _preStocks.add(Stock(
+                itemCode: item.itemCode,
+                itemName: item.itemName,
+                price: item.price,
+                quantity: 1));
+          }
+          setState(() {
+            _preStocks = _preStocks;
+          });
         } else {
-          _preStocks.add(Stock(
-              itemCode: item.itemCode,
-              itemName: item.itemName,
-              price: item.price,
-              quantity: 1));
+          NoItemWaring.showNoItemWaring(context,
+              itemCode: _itemCodeController.text);
         }
-        setState(() {
-          _preStocks = _preStocks;
-        });
-      } else {
-        showSnackBar(context, 'Cant find any item', 'warning');
       }
     } catch (e) {
       showSnackBar(context, 'Error occurred: $e', 'error');

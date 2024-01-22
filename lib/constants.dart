@@ -25,7 +25,7 @@ class ScreenConst {
 }
 
 class API {
-  static const BASE_URL = "http://192.168.0.133:5000/";
+  static const BASE_URL = "http://localhost:5000/";
 
   // Item Base Url
   static const ITEM_BASE = "${BASE_URL}Item/";
@@ -34,9 +34,11 @@ class API {
   // Item Serises (GET)
   static const ITEM_SERIES = "${BASE_URL}ItemSeries";
   // Item Infos (GET)
-  static const ITEM = "${ITEM_BASE}Item/all";
+  static const ITEMS = "${ITEM_BASE}Item/all";
+  // Item Info (GET)
+  static const ITEM = "${ITEM_BASE}Item";
   // Register New Item (POST)
-  static const REGISTER_ITEM = "${BASE_URL}RegisterItem";
+  static const REGISTER_ITEM = "${ITEM_BASE}RegisterItem";
 
   // Extra Expense Base Url
   static const EXTRA_EXPENSE_BASE = "${BASE_URL}ExtraExpense/";

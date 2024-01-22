@@ -9,7 +9,9 @@ import '../widgets/barcode_scanner.dart';
 import '../widgets/show_snack_bar.dart';
 
 class RegisterItemPage extends StatefulWidget {
-  const RegisterItemPage({super.key});
+  final String itemCode;
+
+  const RegisterItemPage({super.key, this.itemCode = ''});
 
   @override
   _RegisterItemPageState createState() => _RegisterItemPageState();
@@ -18,8 +20,16 @@ class RegisterItemPage extends StatefulWidget {
 class _RegisterItemPageState extends State<RegisterItemPage> {
   final TextEditingController _itemCodeController = TextEditingController();
   final TextEditingController _itemNameController = TextEditingController();
+  final TextEditingController _itemTypeController = TextEditingController();
+  final TextEditingController _seriesController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemCodeController.text = widget.itemCode;
+  }
 
   Future<void> _submitData() async {
     if (_itemNameController.text.isEmpty || _priceController.text.isEmpty) {
@@ -42,6 +52,8 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
         body: jsonEncode(<String, dynamic>{
           'itemCode': _itemCodeController.text,
           'itemName': _itemNameController.text,
+          'itemType': _itemTypeController.text,
+          'series': _seriesController.text,
           'price': Decimal.parse(_priceController.text),
         }),
       );
@@ -94,6 +106,14 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
             TextField(
               decoration: const InputDecoration(labelText: 'Item Name'),
               controller: _itemNameController,
+            ),
+            TextField(
+              decoration: const InputDecoration(labelText: 'Item Type'),
+              controller: _itemTypeController,
+            ),
+            TextField(
+              decoration: const InputDecoration(labelText: 'Item Series'),
+              controller: _seriesController,
             ),
             TextField(
               decoration: const InputDecoration(labelText: 'Item Price'),

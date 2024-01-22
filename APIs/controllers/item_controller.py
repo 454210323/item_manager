@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy import false, true
 from models.dtos.item import Item
 from database import db
 import logging
@@ -16,13 +17,12 @@ def _get_all_item():
 @bp_item.route("/Item")
 def _get_item_by_item_code():
     itemCode = request.args.get("itemCode", default=None, type=str)
-
     item: Item = Item.query.get(itemCode)
     if item:
         logging.debug(item)
-        return jsonify({"item": item.to_dict()}), 200
+        return jsonify({"item": item.to_dict(), "status": True}), 200
     else:
-        return jsonify({"item": ""}), 500
+        return jsonify({"item": "", "status": False}), 200
 
 
 @bp_item.route("/RegisterItem", methods=["POST"])
@@ -32,7 +32,7 @@ def _register_item():
         new_item = Item(
             item_code=data["itemCode"],
             item_name=data["itemName"],
-            item_type=data["item_type"],
+            item_type=data["itemType"],
             series=data["series"],
             price=data["price"],
         )

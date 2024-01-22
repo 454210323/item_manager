@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/register_stock_page.dart';
+import 'package:flutter_application_1/pages/register_stock_shipment_page.dart';
 
 import '../constants.dart';
 import '../pages/extra_expense_page.dart';
@@ -124,7 +124,7 @@ Widget _currentPageContent(selectedMenuItem) {
     case ScreenConst.STOCKS:
       return const StocksPage();
     case ScreenConst.REGISTER_STOCK:
-      return const RegisterStockPage();
+      return const RegisterStockShipmentPage();
     case ScreenConst.REGISTER_SHIPMENT:
       return const Text('todo');
     case ScreenConst.EXTRA_EXPENSE:

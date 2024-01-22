@@ -30,7 +30,7 @@ class _ItemPageState extends State<ItemPage> {
       _isLoading = true;
     });
     try {
-      var url = Uri.parse(API.ITEM);
+      var url = Uri.parse(API.ITEMS);
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
