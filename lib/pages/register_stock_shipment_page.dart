@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import '../constants.dart';
 import '../models/stock.dart';
 import '../widgets/barcode_scanner.dart';
+import '../widgets/dynamic_segment.dart';
 import '../widgets/no_item_waring.dart';
 import '../widgets/stock_data_table.dart';
 
@@ -25,11 +26,21 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
   final TextEditingController _itemCodeController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
+  final List<String> _modes = ["进货", "出货"];
+
+  String _selectedMode = "进货";
+
   List<Stock> _preStocks = [];
 
   void _onChanged(List<Stock> stocks) {
     setState(() {
       _preStocks = stocks;
+    });
+  }
+
+  void _setSelectedMode(String mode) {
+    setState(() {
+      _selectedMode = mode;
     });
   }
 
@@ -110,12 +121,16 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Register Stock"),
+          title: Text("登录$_selectedMode"),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
+              DynamicSegment(
+                options: _modes,
+                onValueChanged: _setSelectedMode,
+              ),
               Row(
                 children: [
                   Expanded(
@@ -164,7 +179,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                   }
                 },
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 20),
               Row(
                 children: [
                   ElevatedButton(
