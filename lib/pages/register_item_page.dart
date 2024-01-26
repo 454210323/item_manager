@@ -45,7 +45,7 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
     });
     try {
       final response = await http.post(
-        Uri.parse(API.REGISTER_ITEM),
+        Uri.parse(API.ITEM),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

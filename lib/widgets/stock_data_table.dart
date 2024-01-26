@@ -49,7 +49,7 @@ class _StockDataTableState extends State<StockDataTable> {
             ),
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onSubmitted: (newValue) {
+            onChanged: (newValue) {
               if ('price' == key) {
                 item.price = Decimal.tryParse(newValue)!;
               }
@@ -77,6 +77,11 @@ class _StockDataTableState extends State<StockDataTable> {
 
   @override
   Widget build(BuildContext context) {
-    return _itemTable();
+    return widget.data.isEmpty
+        ? const Text('no item')
+        : SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: _itemTable(),
+          );
   }
 }

@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import '../constants.dart';
 import '../models/stock.dart';
 import '../widgets/barcode_scanner.dart';
+import '../widgets/drop_down.dart';
 import '../widgets/dynamic_segment.dart';
 import '../widgets/no_item_waring.dart';
 import '../widgets/stock_data_table.dart';
@@ -32,6 +33,10 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
 
   List<Stock> _preStocks = [];
 
+  List<String> _recipients = [];
+
+  String _selectedRecipient = "";
+
   void _onChanged(List<Stock> stocks) {
     setState(() {
       _preStocks = stocks;
@@ -39,8 +44,15 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
   }
 
   void _setSelectedMode(String mode) {
+    _clear();
     setState(() {
       _selectedMode = mode;
+    });
+  }
+
+  void _setSelectedRecipient(String recipient) {
+    setState(() {
+      _selectedRecipient = recipient;
     });
   }
 
@@ -49,12 +61,15 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
       showSnackBar(context, 'Please add List', 'error');
     }
     try {
+      String postUrl = _selectedMode == "进货" ? API.STOCK : API.SHIPMENT;
+
       final response = await http.post(
-        Uri.parse(API.STOCK),
+        Uri.parse(postUrl),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(<String, dynamic>{
-          'purchaseDate': _selectedDate.toIso8601String(),
-          'stocks': _preStocks.map((e) => e.toJson()).toList(),
+          'date': _selectedDate.toIso8601String(),
+          'data': _preStocks.map((e) => e.toJson()).toList(),
+          'recipient': _selectedRecipient
         }),
       );
       if (response.statusCode == 200) {
@@ -109,12 +124,38 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
     }
   }
 
+  Future<void> _fetchRecipients() async {
+    try {
+      var response = await http.get(Uri.parse(API.Recipients));
+      if (response.statusCode == 200) {
+        _recipients =
+            List<String>.from(json.decode(response.body)["recipients"]);
+      }
+    } catch (e) {
+      showSnackBar(context, 'Error occurred: $e', 'error');
+    }
+  }
+
   void _clear() {
     setState(() {
       _selectedDate = DateTime.now();
       _preStocks = [];
       _itemCodeController.clear();
     });
+  }
+
+  Widget _RecipientSelector() {
+    return CustomDropdownButton(
+      hint: "选择客户",
+      options: _recipients,
+      onSelected: _setSelectedRecipient,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRecipients();
   }
 
   @override
@@ -160,8 +201,9 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                 ],
               ),
               const SizedBox(height: 20),
+              _selectedMode == "出货" ? _RecipientSelector() : Container(),
               Text(
-                'Purchase Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
+                '$_selectedMode日: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
               ),
               ElevatedButton(
                 child: const Text('Select Date'),
@@ -187,7 +229,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                     child: const Text('Register'),
                   ),
                   ElevatedButton(
-                    onPressed: _submitData,
+                    onPressed: _clear,
                     child: const Text('Clear'),
                   ),
                 ],

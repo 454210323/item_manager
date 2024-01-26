@@ -14,8 +14,8 @@ bp_stock = Blueprint("stock", __name__, url_prefix="/Stock")
 @bp_stock.route("/Stock", methods=["POST"])
 def _register_stock():
     data = request.json
-    purchase_date = data["purchaseDate"]
-    stocks = data["stocks"]
+    purchase_date = data["date"]
+    stocks = data["data"]
     if not purchase_date or not stocks:
         return jsonify("Invalid data"), 400
     try:
@@ -30,7 +30,7 @@ def _register_stock():
             )
             db.session.add(new_stock)
         db.session.commit()
-        return jsonify({"message": "Shipments added successfully"}), 200
+        return jsonify({"message": "Stock added successfully"}), 200
     except Exception as e:
         logging.info(e)
         return jsonify({"error": str(e)}), 500

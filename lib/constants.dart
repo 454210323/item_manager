@@ -30,15 +30,13 @@ class API {
   // Item Base Url
   static const ITEM_BASE = "${BASE_URL}Item/";
   // Item Types (GET)
-  static const ITEM_TYPES = "${BASE_URL}ItemTypes";
+  static const ITEM_TYPES = "${ITEM_BASE}Type/all";
   // Item Serises (GET)
-  static const ITEM_SERIES = "${BASE_URL}ItemSeries";
+  static const ITEM_SERIES = "${ITEM_BASE}Series/all";
   // Item Infos (GET)
   static const ITEMS = "${ITEM_BASE}Item/all";
   // Item Info (GET)
   static const ITEM = "${ITEM_BASE}Item";
-  // Register New Item (POST)
-  static const REGISTER_ITEM = "${ITEM_BASE}RegisterItem";
 
   // Extra Expense Base Url
   static const EXTRA_EXPENSE_BASE = "${BASE_URL}ExtraExpense/";
@@ -56,4 +54,11 @@ class API {
 
   // Stock Shipemnt List (GET)
   static const STOCK_SHIPMENT_INFOS = "${BASE_URL}StockShipmentInfos";
+
+  // Shipment Base Url
+  static const SHIPMENT_BASE = "${BASE_URL}Shipment/";
+  // Shipment (POST)
+  static const SHIPMENT = "${SHIPMENT_BASE}Shipment";
+  // Recipient (GET)
+  static const Recipients = "${SHIPMENT_BASE}Recipient/all";
 }
