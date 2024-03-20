@@ -7,12 +7,13 @@ import '../models/stock.dart';
 class StockDataTable extends StatefulWidget {
   final List<Stock> data;
   final void Function(List<Stock>) onChanged;
+  final int imageColumnIndex;
 
-  const StockDataTable({
-    super.key,
-    required this.data,
-    required this.onChanged,
-  });
+  const StockDataTable(
+      {super.key,
+      required this.data,
+      required this.onChanged,
+      this.imageColumnIndex = 0});
 
   @override
   State<StockDataTable> createState() => _StockDataTableState();
@@ -58,6 +59,33 @@ class _StockDataTableState extends State<StockDataTable> {
               }
               widget.onChanged(widget.data);
             },
+          ));
+        } else if ('image' == key) {
+          return DataCell(Container(
+            alignment: Alignment.centerLeft,
+            child: Image.network(
+              value,
+              width: 40,
+              height: 40,
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  alignment: Alignment.centerLeft,
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+              // 设置图片加载失败时的占位图
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return const Text('加载失败');
+              },
+            ),
           ));
         } else {
           return DataCell(Text(value.toString()));

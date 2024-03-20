@@ -53,7 +53,7 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
         _priceController.text = _item.price.toString();
         _janCodeController.text = _item.janCode;
         setState(() {
-          _imagePath = _item.imagePath;
+          _imagePath = _item.image;
         });
       } else {
         // Handle the error

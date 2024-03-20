@@ -5,12 +5,14 @@ import 'table_item.dart';
 class Stock extends TableItem {
   String itemCode;
   String itemName;
+  String image;
   Decimal price;
   int quantity;
 
   Stock(
       {required this.itemCode,
       required this.itemName,
+      required this.image,
       required this.price,
       required this.quantity});
 
@@ -19,6 +21,7 @@ class Stock extends TableItem {
     return {
       // 'itemCode': itemCode,
       'itemName': itemName,
+      'image': image,
       'price': price.toString(),
       'quantity': quantity
     };
@@ -28,6 +31,7 @@ class Stock extends TableItem {
     return {
       'itemCode': itemCode,
       'itemName': itemName,
+      'image': image,
       'price': price.toString(),
       'quantity': quantity
     };

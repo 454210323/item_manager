@@ -32,7 +32,7 @@ class _ItemPageState extends State<ItemPage> {
   @override
   void initState() {
     super.initState();
-    _fetchData(_selectedSeries);
+    // _fetchData(_selectedSeries);
     _fetchSeries();
   }
 
@@ -84,24 +84,6 @@ class _ItemPageState extends State<ItemPage> {
     }
   }
 
-  List<Item> shortenJanCode(List<Item> items) {
-    return items.map<Item>((item) {
-      if (item.janCode.length <= 4) {
-        return item;
-      } else {
-        item = Item(
-            itemCode: item.itemCode,
-            itemName: item.itemName,
-            type: item.type,
-            series: item.series,
-            price: item.price,
-            janCode: item.janCode.substring(item.janCode.length - 4),
-            imagePath: item.imagePath);
-        return item;
-      }
-    }).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,7 +124,7 @@ class _ItemPageState extends State<ItemPage> {
                       onPressed: () {
                         _fetchData(_selectedSeries);
                       },
-                      child: const Text('刷新'),
+                      child: const Text('检索'),
                     ),
                   ),
                 ],
@@ -155,7 +137,7 @@ class _ItemPageState extends State<ItemPage> {
                       : SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: DynamicDataTable(
-                            data: shortenJanCode(_items),
+                            data: _items,
                             visibleColumns: getVisiableColumns(
                                 MediaQuery.of(context).size.width),
                             imageColumnIndex: getVisiableColumns(

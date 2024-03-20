@@ -98,6 +98,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                 return Stock(
                     itemCode: e.itemCode,
                     itemName: e.itemName,
+                    image: "${API.ITEM_IMAGE}${e.itemCode}.jpg",
                     price: e.price,
                     quantity: e.quantity + 1);
               } else {
@@ -108,6 +109,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
             _preStocks.add(Stock(
                 itemCode: item.itemCode,
                 itemName: item.itemName,
+                image: "${API.ITEM_IMAGE}${item.itemCode}.jpg",
                 price: item.price,
                 quantity: 1));
           }
@@ -177,7 +179,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                   Expanded(
                     child: TextField(
                       controller: _itemCodeController,
-                      decoration: const InputDecoration(labelText: "Item Code"),
+                      decoration: const InputDecoration(labelText: "商品编码"),
                       inputFormatters: <TextInputFormatter>[
                         FilteringTextInputFormatter.allow(
                             RegExp("[a-z]|[0-9]")),
@@ -185,7 +187,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                     ),
                   ),
                   ElevatedButton(
-                      onPressed: _fetchItem, child: const Text('Search')),
+                      onPressed: _fetchItem, child: const Text('检索')),
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () async {
@@ -196,7 +198,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                       });
                       _fetchItem();
                     },
-                    child: const Text('Scan'),
+                    child: const Text('扫描'),
                   )
                 ],
               ),
@@ -206,7 +208,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                 '$_selectedMode日: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
               ),
               ElevatedButton(
-                child: const Text('Select Date'),
+                child: const Text('选择日期'),
                 onPressed: () async {
                   final DateTime? picked = await showDatePicker(
                     context: context,
@@ -226,11 +228,11 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                 children: [
                   ElevatedButton(
                     onPressed: _submitData,
-                    child: const Text('Register'),
+                    child: const Text('登录'),
                   ),
                   ElevatedButton(
                     onPressed: _clear,
-                    child: const Text('Clear'),
+                    child: const Text('清空'),
                   ),
                 ],
               ),

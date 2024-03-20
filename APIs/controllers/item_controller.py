@@ -114,11 +114,14 @@ def _get_item_by_conditions():
     item_type = request.args.get("itemType", default=None, type=str)
     query = db.session.query(Item)
 
-    if item_code is not None:
+    def is_not_empty(s):
+        return s is not None and s != ""
+
+    if is_not_empty(item_code):
         query = query.filter(Item.item_code == item_code)
-    if series is not None:
+    if is_not_empty(series):
         query = query.filter(Item.series == series)
-    if item_type is not None:
+    if is_not_empty(item_type):
         query = query.filter(Item.item_type == item_type)
 
     items = query.all()

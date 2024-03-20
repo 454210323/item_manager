@@ -10,7 +10,7 @@ class Item extends TableItem {
   final String series;
   final Decimal price;
   final String janCode;
-  final String imagePath;
+  final String image;
 
   Item(
       {required this.itemCode,
@@ -19,7 +19,7 @@ class Item extends TableItem {
       required this.series,
       required this.price,
       required this.janCode,
-      required this.imagePath});
+      required this.image});
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
@@ -29,7 +29,7 @@ class Item extends TableItem {
         series: json['series'],
         price: Decimal.parse(json['price'] ?? '0'),
         janCode: json['jan_code'],
-        imagePath: "${API.ITEM_IMAGE}${json['item_code']}.jpg");
+        image: "${API.ITEM_IMAGE}${json['item_code']}.jpg");
   }
   @override
   Map<String, dynamic> toTableData() {
@@ -40,7 +40,7 @@ class Item extends TableItem {
       'series': series,
       'price': price,
       'janCode': janCode,
-      'imagePath': imagePath
+      'image': image
     };
   }
 
@@ -51,7 +51,7 @@ class Item extends TableItem {
     'series',
     'price',
     'janCode',
-    'imagePath',
+    'image',
   ];
 
   static const columnsForMediumScreen = [
@@ -61,8 +61,8 @@ class Item extends TableItem {
     'series',
     'price',
     'janCode',
-    'imagePath'
+    'image'
   ];
 
-  static const columnsForSmallScreen = ['itemCode', 'janCode', 'imagePath'];
+  static const columnsForSmallScreen = ['itemCode', 'itemName', 'image'];
 }
