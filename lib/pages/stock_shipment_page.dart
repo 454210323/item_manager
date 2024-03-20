@@ -8,14 +8,14 @@ import '../constants.dart';
 import '../models/stock_shipment.dart';
 import '../widgets/dynamic_data_table.dart';
 
-class StocksPage extends StatefulWidget {
-  const StocksPage({super.key});
+class StockShipmentPage extends StatefulWidget {
+  const StockShipmentPage({super.key});
 
   @override
-  _StocksPageState createState() => _StocksPageState();
+  _StockShipmentPageState createState() => _StockShipmentPageState();
 }
 
-class _StocksPageState extends State<StocksPage> {
+class _StockShipmentPageState extends State<StockShipmentPage> {
   List<StockShipment> _StockShipments = [];
 
   Future<void> _onSearch(
@@ -23,7 +23,7 @@ class _StocksPageState extends State<StocksPage> {
     var url = Uri.parse(API.STOCK_SHIPMENT_INFOS).replace(queryParameters: {
       'itemCode': itemCode,
       'itemType': itemType,
-      'itemSerise': itemSerise,
+      'itemSeries': itemSerise,
     });
 
     var response = await http.get(url);

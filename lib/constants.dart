@@ -7,10 +7,11 @@ class AppConst {
     MenuItem(ScreenConst.ITEMS),
     MenuItem(ScreenConst.STOCK_SHIPMENT, subItems: [
       MenuItem(ScreenConst.STOCKS),
-      MenuItem(ScreenConst.REGISTER_STOCK),
-      MenuItem(ScreenConst.REGISTER_SHIPMENT)
+      MenuItem(ScreenConst.REGISTER_STOCK_SHIPMENT),
+      // MenuItem(ScreenConst.REGISTER_SHIPMENT)
     ]),
     MenuItem(ScreenConst.EXTRA_EXPENSE),
+    MenuItem(ScreenConst.TEST_PAGE),
   ];
 }
 
@@ -19,13 +20,14 @@ class ScreenConst {
   static const ITEMS = "商品一览";
   static const STOCK_SHIPMENT = "库存出货";
   static const STOCKS = "库存一览";
-  static const REGISTER_STOCK = "增加库存";
-  static const REGISTER_SHIPMENT = "增加出货";
+  static const REGISTER_STOCK_SHIPMENT = "添加进货出货";
+  // static const REGISTER_SHIPMENT = "增加出货";
   static const EXTRA_EXPENSE = "额外消费";
+  static const TEST_PAGE = "测试画面";
 }
 
 class API {
-  static const BASE_URL = "http://localhost:5000/";
+  static const BASE_URL = "http://192.168.0.133:5000/";
 
   // Item Base Url
   static const ITEM_BASE = "${BASE_URL}Item/";
@@ -37,6 +39,15 @@ class API {
   static const ITEMS = "${ITEM_BASE}Item/all";
   // Item Info (GET)
   static const ITEM = "${ITEM_BASE}Item";
+
+  // Item info (PUT)
+  static const Item_JANCODE = "${ITEM_BASE}JanCode";
+
+  // Item info (GET)
+  static const ITEM_CONDITIONS = "${ITEM_BASE}Conditions";
+
+  // Item image
+  static const ITEM_IMAGE = "${BASE_URL}static/images/";
 
   // Extra Expense Base Url
   static const EXTRA_EXPENSE_BASE = "${BASE_URL}ExtraExpense/";
@@ -53,7 +64,7 @@ class API {
   static const STOCK = "${STOCK_BASE}Stock";
 
   // Stock Shipemnt List (GET)
-  static const STOCK_SHIPMENT_INFOS = "${BASE_URL}StockShipmentInfos";
+  static const STOCK_SHIPMENT_INFOS = "${STOCK_BASE}StockShipmentInfos";
 
   // Shipment Base Url
   static const SHIPMENT_BASE = "${BASE_URL}Shipment/";

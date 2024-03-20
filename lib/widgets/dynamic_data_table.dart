@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../models/table_item.dart';
+import '../pages/update_item_page.dart';
 
 class DynamicDataTable extends StatefulWidget {
   final List<TableItem> data;
   final int interactiveColumnIndex;
   final List<String> visibleColumns;
+  final int imageColumnIndex;
 
-  const DynamicDataTable({
-    super.key,
-    required this.data,
-    this.visibleColumns = const [],
-    this.interactiveColumnIndex = 0,
-  });
+  const DynamicDataTable(
+      {super.key,
+      required this.data,
+      this.visibleColumns = const [],
+      this.interactiveColumnIndex = 0,
+      this.imageColumnIndex = 0});
 
   @override
   State<DynamicDataTable> createState() => _DynamicDataTableState();
@@ -77,28 +79,71 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
 
       var cells = filterdData.asMap().entries.map((e) {
         if (e.key == widget.interactiveColumnIndex) {
+          // return DataCell(
+          //   Text(e.value.toString()),
+          //   onTap: () {
+          //     showDialog(
+          //       context: context,
+          //       builder: (BuildContext context) {
+          //         return AlertDialog(
+          //           title: const Text('Detail'),
+          //           content: const Text('For detail'),
+          //           actions: <Widget>[
+          //             TextButton(
+          //               child: const Text('close'),
+          //               onPressed: () {
+          //                 Navigator.of(context).pop();
+          //               },
+          //             ),
+          //           ],
+          //         );
+          //       },
+          //     );
+          //   },
+          // );
           return DataCell(
             Text(e.value.toString()),
             onTap: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('Detail'),
-                    content: const Text('For detail'),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('close'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UpdateItemPage(
+                          itemCode: e.value.toString(),
+                        )),
               );
             },
           );
+        } else if (widget.imageColumnIndex != 0 &&
+            e.key == widget.imageColumnIndex) {
+          return DataCell(Container(
+            alignment: Alignment.centerLeft,
+            // 使用Image.network来加载并显示网络图片
+            child: Image.network(
+              e.value.toString(),
+              // 你可以根据需要设置宽度和高度
+              width: 40,
+              height: 40,
+              // 设置图片加载过程中的占位符
+              loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent? loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  alignment: Alignment.centerLeft,
+                  child: CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                  ),
+                );
+              },
+              // 设置图片加载失败时的占位图
+              errorBuilder: (BuildContext context, Object exception,
+                  StackTrace? stackTrace) {
+                return const Text('加载失败');
+              },
+            ),
+          ));
         } else {
           return DataCell(Text(e.value.toString()));
         }
@@ -109,7 +154,7 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
 
   DataTable _itemTable() {
     return DataTable(
-      columnSpacing: 30,
+      columnSpacing: 5,
       columns: _itemTableColumns(),
       rows: _itemTableRows(),
       sortColumnIndex: _currentSortColumn,
