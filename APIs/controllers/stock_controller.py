@@ -55,8 +55,8 @@ def items_summary():
         {
             "item_code": item.item_code,
             "item_name": item.item_name,
-            "total_stock": item.total_stock,
-            "total_shipment": item.total_shipment,
+            "stock_quantity": item.total_stock,
+            "shipment_quantity": item.total_shipment,
             "remaining_quantity": item.total_stock - item.total_shipment,
         }
         for item in results
@@ -97,8 +97,8 @@ def _get_stock_shipment_infos():
             "item_type": item.item_type,
             "series": item.series,
             "price": item.price,
-            "total_stock": item.total_stock,
-            "total_shipment": item.total_shipment,
+            "stock_quantity": item.total_stock,
+            "shipment_quantity": item.total_shipment,
         }
         for item in results
     ]

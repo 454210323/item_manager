@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import false, true
+from sqlalchemy.orm.exc import NoResultFound
 from models.dtos.item import Item
 from database import db
 import logging
@@ -16,8 +17,8 @@ def _get_all_item():
 
 @bp_item.route("/Item")
 def _get_item_by_item_code():
-    itemCode = request.args.get("itemCode", default=None, type=str)
-    item: Item = Item.query.get(itemCode)
+    item_code = request.args.get("itemCode", default=None, type=str)
+    item: Item = Item.query.get(item_code)
     if item:
         logging.debug(item)
         return jsonify({"item": item.to_dict(), "status": True}), 200
@@ -44,6 +45,34 @@ def _register_item():
         return jsonify({"error": str(e)}), 500
 
 
+@bp_item.route("/Item", methods=["PUT"])
+def _update_item():
+    data = request.json
+    try:
+        item_code = (data["itemCode"],)
+        item_name = (data["itemName"],)
+        item_type = (data["itemType"],)
+        series = (data["series"],)
+        price = (data["price"],)
+        jan_code = data["janCode"]
+
+        item: Item = Item.query.get(item_code)
+        if item:
+            item.item_name = item_name
+            item.item_type = item_type
+            item.series = series
+            item.price = price
+            item.jan_code = jan_code
+
+            db.session.commit()
+            return jsonify({"message": "Item added successfully"}), 200
+        else:
+            raise NoResultFound()
+    except Exception as e:
+        logging.info(e)
+        return jsonify({"error": str(e)}), 500
+
+
 @bp_item.route("/Type/all")
 def _get_all_types():
     item_types = [
@@ -59,3 +88,38 @@ def _get_all_series():
         series_set[0] for series_set in db.session.query(Item.series).distinct().all()
     ]
     return jsonify({"series": series}), 200
+
+
+@bp_item.route("/JanCode", methods=["PUT"])
+def _update_item_jan_code():
+    data = request.json
+    item_code = data["itemCode"]
+    jan_code = data["janCode"]
+    try:
+        item: Item = db.session.query(Item).filter(item_code == item_code).first()
+        if item:
+            item.jan_code = jan_code
+            db.session.commit()
+            return jsonify({"message": "Update successfully"}), 200
+        else:
+            raise NoResultFound()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@bp_item.route("/Conditions")
+def _get_item_by_conditions():
+    item_code = request.args.get("itemCode", default=None, type=str)
+    series = request.args.get("itemSeries", default=None, type=str)
+    item_type = request.args.get("itemType", default=None, type=str)
+    query = db.session.query(Item)
+
+    if item_code is not None:
+        query = query.filter(Item.item_code == item_code)
+    if series is not None:
+        query = query.filter(Item.series == series)
+    if item_type is not None:
+        query = query.filter(Item.item_type == item_type)
+
+    items = query.all()
+    return jsonify({"items": [item.to_dict() for item in items]}), 200
