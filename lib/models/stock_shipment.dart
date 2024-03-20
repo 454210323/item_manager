@@ -1,3 +1,5 @@
+import 'package:decimal/decimal.dart';
+
 import 'item.dart';
 
 class StockShipment extends Item {
@@ -10,6 +12,8 @@ class StockShipment extends Item {
     required super.type,
     required super.series,
     required super.price,
+    required super.janCode,
+    required super.imagePath,
     required this.stockQuantity,
     required this.shipmentQuantity,
   });
@@ -20,9 +24,11 @@ class StockShipment extends Item {
       itemName: json['item_name'],
       type: json['item_type'],
       series: json['series'],
-      price: json['price'],
-      stockQuantity: json['stock_quantity'],
-      shipmentQuantity: json['shipment_quantity'],
+      price: Decimal.parse(json['price']),
+      janCode: json['jan_code'],
+      imagePath: json['image_path'],
+      stockQuantity: int.parse(json['stock_quantity']),
+      shipmentQuantity: int.parse(json['shipment_quantity']),
     );
   }
   @override
@@ -33,6 +39,8 @@ class StockShipment extends Item {
       'type': type,
       'series': series,
       'price': price,
+      'janCode': janCode,
+      'imagePath': imagePath,
       'stockQuantity': stockQuantity,
       'shipmentQuantity': shipmentQuantity
     };
@@ -44,6 +52,8 @@ class StockShipment extends Item {
     'type',
     'series',
     'price',
+    'janCode',
+    'imagePath',
     'stockQuantity',
     'shipmentQuantity',
   ];
@@ -53,14 +63,15 @@ class StockShipment extends Item {
     'itemName',
     'type',
     'series',
+    'imagePath',
     'stockQuantity',
     'shipmentQuantity',
   ];
 
   static const columnsForSmallScreen = [
     'itemName',
-    'type',
-    'series',
+    'imagePath',
     'stockQuantity',
+    'shipmentQuantity',
   ];
 }

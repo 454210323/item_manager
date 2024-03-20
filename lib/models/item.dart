@@ -1,28 +1,35 @@
 import 'package:decimal/decimal.dart';
 import 'package:flutter_application_1/models/table_item.dart';
 
+import '../constants.dart';
+
 class Item extends TableItem {
   final String itemCode;
   final String itemName;
   final String type;
   final String series;
   final Decimal price;
+  final String janCode;
+  final String imagePath;
 
   Item(
       {required this.itemCode,
       required this.itemName,
       required this.type,
       required this.series,
-      required this.price});
+      required this.price,
+      required this.janCode,
+      required this.imagePath});
 
   factory Item.fromJson(Map<String, dynamic> json) {
     return Item(
-      itemCode: json['item_code'],
-      itemName: json['item_name'],
-      type: json['item_type'],
-      series: json['series'],
-      price: Decimal.parse(json['price']),
-    );
+        itemCode: json['item_code'],
+        itemName: json['item_name'],
+        type: json['item_type'],
+        series: json['series'],
+        price: Decimal.parse(json['price'] ?? '0'),
+        janCode: json['jan_code'],
+        imagePath: "${API.ITEM_IMAGE}${json['item_code']}.jpg");
   }
   @override
   Map<String, dynamic> toTableData() {
@@ -31,7 +38,9 @@ class Item extends TableItem {
       'itemName': itemName,
       'type': type,
       'series': series,
-      'price': price
+      'price': price,
+      'janCode': janCode,
+      'imagePath': imagePath
     };
   }
 
@@ -41,6 +50,8 @@ class Item extends TableItem {
     'type',
     'series',
     'price',
+    'janCode',
+    'imagePath',
   ];
 
   static const columnsForMediumScreen = [
@@ -49,11 +60,9 @@ class Item extends TableItem {
     'type',
     'series',
     'price',
+    'janCode',
+    'imagePath'
   ];
 
-  static const columnsForSmallScreen = [
-    'itemCode',
-    'itemName',
-    'price',
-  ];
+  static const columnsForSmallScreen = ['itemCode', 'janCode', 'imagePath'];
 }

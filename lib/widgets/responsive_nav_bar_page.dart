@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/pages/register_stock_shipment_page.dart';
+import 'package:flutter_application_1/pages/test_page.dart';
 
 import '../constants.dart';
 import '../pages/extra_expense_page.dart';
 import '../pages/home_page.dart';
 import '../pages/item_page.dart';
-import '../pages/stocks_page.dart';
+import '../pages/stock_shipment_page.dart';
 import 'expansion_tile.dart';
 import 'menu_item.dart';
 import 'profile_icon.dart';
@@ -122,13 +123,15 @@ Widget _currentPageContent(selectedMenuItem) {
     case ScreenConst.ITEMS:
       return const ItemPage();
     case ScreenConst.STOCKS:
-      return const StocksPage();
-    case ScreenConst.REGISTER_STOCK:
+      return const StockShipmentPage();
+    case ScreenConst.REGISTER_STOCK_SHIPMENT:
       return const RegisterStockShipmentPage();
-    case ScreenConst.REGISTER_SHIPMENT:
-      return const Text('todo');
+    // case ScreenConst.REGISTER_SHIPMENT:
+    //   return const Text('todo');
     case ScreenConst.EXTRA_EXPENSE:
       return const ExtraExpensePage();
+    case ScreenConst.TEST_PAGE:
+      return const TestPage();
     default:
       return const HomePage();
   }

@@ -23,6 +23,7 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
   final TextEditingController _itemTypeController = TextEditingController();
   final TextEditingController _seriesController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+
   bool _isLoading = false;
 
   @override
@@ -75,67 +76,71 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register New Item')),
+      appBar: AppBar(title: const Text('登录新商品')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _itemCodeController,
-                    decoration: const InputDecoration(labelText: 'Item Code'),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.allow(RegExp("[a-z]|[0-9]")),
-                    ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _itemCodeController,
+                      decoration: const InputDecoration(labelText: '商品编号'),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(
+                            RegExp("[a-z]|[0-9]")),
+                      ],
+                    ),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () async {
-                    String result = await BarcodeScanner.scanBarcode();
-                    if (!mounted) return;
-                    setState(() {
-                      _itemCodeController.text = result;
-                    });
-                  },
-                  child: const Text('Scan'),
-                )
-              ],
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: 'Item Name'),
-              controller: _itemNameController,
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: 'Item Type'),
-              controller: _itemTypeController,
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: 'Item Series'),
-              controller: _seriesController,
-            ),
-            TextField(
-              decoration: const InputDecoration(labelText: 'Item Price'),
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
-              ],
-              controller: _priceController,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                onPressed: _isLoading ? null : _submitData,
-                child: _isLoading
-                    ? const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
-                    : const Text('Register'),
+                  ElevatedButton(
+                    onPressed: () async {
+                      String result = await BarcodeScanner.scanBarcode();
+                      if (!mounted) return;
+                      setState(() {
+                        _itemCodeController.text = result;
+                      });
+                    },
+                    child: const Text('Scan'),
+                  )
+                ],
               ),
-            ),
-          ],
+              TextField(
+                decoration: const InputDecoration(labelText: '商品名'),
+                controller: _itemNameController,
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: '类型'),
+                controller: _itemTypeController,
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: '系列'),
+                controller: _seriesController,
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: '价格'),
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                ],
+                controller: _priceController,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _submitData,
+                  child: _isLoading
+                      ? const CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : const Text('注册'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
