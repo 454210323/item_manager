@@ -49,12 +49,11 @@ def _register_item():
 def _update_item():
     data = request.json
     try:
-        item_code = (data["itemCode"],)
-        item_name = (data["itemName"],)
-        item_type = (data["itemType"],)
-        series = (data["series"],)
-        price = (data["price"],)
-        jan_code = data["janCode"]
+        item_code = data["itemCode"]
+        item_name = data["itemName"]
+        item_type = data["itemType"]
+        series = data["series"]
+        price = data["price"]
 
         item: Item = Item.query.get(item_code)
         if item:
@@ -62,7 +61,6 @@ def _update_item():
             item.item_type = item_type
             item.series = series
             item.price = price
-            item.jan_code = jan_code
 
             db.session.commit()
             return jsonify({"message": "Item added successfully"}), 200

@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>H:\develop_tool\MyProject\flutter_application\build\windows\x64\CMakeFiles\3.26.0-msvc3\x64\Debug\VCTargetsPath</FullPath>
+      <FullPath>H:\develop_tool\MyProject\flutter_application\front_app\build\windows\x64\CMakeFiles\3.26.0-msvc3\x64\Debug\VCTargetsPath</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

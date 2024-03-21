@@ -6,7 +6,6 @@ import 'dart:convert';
 
 import '../constants.dart';
 import '../models/item.dart';
-import '../widgets/barcode_scanner.dart';
 import '../widgets/show_snack_bar.dart';
 
 class UpdateItemPage extends StatefulWidget {
@@ -24,7 +23,6 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
   final TextEditingController _itemTypeController = TextEditingController();
   final TextEditingController _seriesController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _janCodeController = TextEditingController();
 
   bool _isLoading = false;
   bool _enable = true;
@@ -34,7 +32,9 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
   void initState() {
     super.initState();
     _itemCodeController.text = widget.itemCode;
-    _fetchData();
+    if (widget.itemCode.isNotEmpty) {
+      _fetchData();
+    }
   }
 
   Future<void> _fetchData() async {
@@ -51,7 +51,6 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
         _itemTypeController.text = _item.type;
         _seriesController.text = _item.series;
         _priceController.text = _item.price.toString();
-        _janCodeController.text = _item.janCode;
         setState(() {
           _imagePath = _item.image;
         });
@@ -87,7 +86,6 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
           'itemType': _itemTypeController.text,
           'series': _seriesController.text,
           'price': Decimal.parse(_priceController.text),
-          'janCode': _janCodeController.text
         }),
       );
 
@@ -149,31 +147,6 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
                   FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                 ],
                 controller: _priceController,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      enabled: _enable,
-                      controller: _janCodeController,
-                      decoration: const InputDecoration(labelText: 'JanCode'),
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.allow(
-                            RegExp("[a-z]|[0-9]")),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      String result = await BarcodeScanner.scanBarcode();
-                      if (!mounted) return;
-                      setState(() {
-                        _janCodeController.text = result;
-                      });
-                    },
-                    child: const Text('Scan'),
-                  )
-                ],
               ),
               Row(
                 children: [

@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/update_item_page.dart';
 import 'package:flutter_application_1/widgets/dynamic_data_table.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 import '../models/item.dart';
 import '../widgets/drop_down.dart';
-import 'register_item_page.dart';
 
 class ItemPage extends StatefulWidget {
   const ItemPage({super.key});
@@ -42,7 +42,7 @@ class _ItemPageState extends State<ItemPage> {
       setState(() {
         _itemSeries =
             List<String>.from(json.decode(seriesResponse.body)["series"]);
-        _itemSeries.insert(0, '');
+        // _itemSeries.insert(0, '');
       });
     }
   }
@@ -112,7 +112,7 @@ class _ItemPageState extends State<ItemPage> {
                       onPressed: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => const RegisterItemPage()),
+                              builder: (context) => const UpdateItemPage()),
                         );
                       },
                       child: const Text('登录新商品'),

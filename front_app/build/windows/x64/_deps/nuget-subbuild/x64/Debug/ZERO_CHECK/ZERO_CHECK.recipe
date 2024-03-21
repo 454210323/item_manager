@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>H:\develop_tool\MyProject\flutter_application\build\windows\x64\_deps\nuget-subbuild\x64\Debug\ZERO_CHECK</FullPath>
+      <FullPath>H:\develop_tool\MyProject\flutter_application\front_app\build\windows\x64\_deps\nuget-subbuild\x64\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

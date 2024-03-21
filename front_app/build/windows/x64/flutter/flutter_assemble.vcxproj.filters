@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="H:\develop_tool\MyProject\flutter_application\build\windows\x64\CMakeFiles\ed9e2678edb0687b214aae7513def3db\flutter_windows.dll.rule">
+    <CustomBuild Include="H:\develop_tool\MyProject\flutter_application\front_app\build\windows\x64\CMakeFiles\67608638ea783c41a8a343d5caddc3a9\flutter_windows.dll.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="H:\develop_tool\MyProject\flutter_application\build\windows\x64\CMakeFiles\0cf59fd74555011eb82f45ac83d88a3d\flutter_assemble.rule">
+    <CustomBuild Include="H:\develop_tool\MyProject\flutter_application\front_app\build\windows\x64\CMakeFiles\e0b004c75a234516792558534a5861fc\flutter_assemble.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="H:\develop_tool\MyProject\flutter_application\windows\flutter\CMakeLists.txt" />
+    <CustomBuild Include="H:\develop_tool\MyProject\flutter_application\front_app\windows\flutter\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="H:\develop_tool\MyProject\flutter_application\build\windows\x64\flutter\CMakeFiles\flutter_assemble" />
+    <None Include="H:\develop_tool\MyProject\flutter_application\front_app\build\windows\x64\flutter\CMakeFiles\flutter_assemble" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{69212530-238D-3C92-AAC3-041F26B9B67D}</UniqueIdentifier>
+      <UniqueIdentifier>{892AE501-9BC7-3659-82F5-D0D414A7D6D1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

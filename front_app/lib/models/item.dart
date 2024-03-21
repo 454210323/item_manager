@@ -9,7 +9,6 @@ class Item extends TableItem {
   final String type;
   final String series;
   final Decimal price;
-  final String janCode;
   final String image;
 
   Item(
@@ -18,7 +17,6 @@ class Item extends TableItem {
       required this.type,
       required this.series,
       required this.price,
-      required this.janCode,
       required this.image});
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -28,7 +26,6 @@ class Item extends TableItem {
         type: json['item_type'],
         series: json['series'],
         price: Decimal.parse(json['price'] ?? '0'),
-        janCode: json['jan_code'],
         image: "${API.ITEM_IMAGE}${json['item_code']}.jpg");
   }
   @override
@@ -39,7 +36,6 @@ class Item extends TableItem {
       'type': type,
       'series': series,
       'price': price,
-      'janCode': janCode,
       'image': image
     };
   }
@@ -50,7 +46,6 @@ class Item extends TableItem {
     'type',
     'series',
     'price',
-    'janCode',
     'image',
   ];
 
@@ -60,7 +55,6 @@ class Item extends TableItem {
     'type',
     'series',
     'price',
-    'janCode',
     'image'
   ];
 

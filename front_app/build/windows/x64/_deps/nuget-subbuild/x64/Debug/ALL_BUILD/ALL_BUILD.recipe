@@ -2,13 +2,13 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>H:\develop_tool\MyProject\flutter_application\build\windows\x64\_deps\nuget-subbuild\x64\Debug\ZERO_CHECK</FullPath>
+      <FullPath>H:\develop_tool\MyProject\flutter_application\front_app\build\windows\x64\_deps\nuget-subbuild\x64\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>H:\develop_tool\MyProject\flutter_application\build\windows\x64\_deps\nuget-subbuild\x64\Debug\nuget-populate</FullPath>
+      <FullPath>H:\develop_tool\MyProject\flutter_application\front_app\build\windows\x64\_deps\nuget-subbuild\x64\Debug\nuget-populate</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>H:\develop_tool\MyProject\flutter_application\build\windows\x64\_deps\nuget-subbuild\x64\Debug\ALL_BUILD</FullPath>
+      <FullPath>H:\develop_tool\MyProject\flutter_application\front_app\build\windows\x64\_deps\nuget-subbuild\x64\Debug\ALL_BUILD</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

@@ -1,6 +1,6 @@
-^H:\DEVELOP_TOOL\MYPROJECT\FLUTTER_APPLICATION\BUILD\WINDOWS\X64\_DEPS\NUGET-SUBBUILD\CMAKELISTS.TXT
+^H:\DEVELOP_TOOL\MYPROJECT\FLUTTER_APPLICATION\FRONT_APP\BUILD\WINDOWS\X64\_DEPS\NUGET-SUBBUILD\CMAKELISTS.TXT
 setlocal
-H:\develop_tool\VisualStudio\VisualStudio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe -SH:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild -BH:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild --check-stamp-file H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/generate.stamp
+H:\develop_tool\VisualStudio\VisualStudio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe -SH:/develop_tool/MyProject/flutter_application/front_app/build/windows/x64/_deps/nuget-subbuild -BH:/develop_tool/MyProject/flutter_application/front_app/build/windows/x64/_deps/nuget-subbuild --check-stamp-file H:/develop_tool/MyProject/flutter_application/front_app/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

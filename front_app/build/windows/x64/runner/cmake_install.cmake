@@ -1,4 +1,4 @@
-# Install script for directory: H:/develop_tool/MyProject/flutter_application/windows/runner
+# Install script for directory: H:/develop_tool/MyProject/flutter_application/front_app/windows/runner
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

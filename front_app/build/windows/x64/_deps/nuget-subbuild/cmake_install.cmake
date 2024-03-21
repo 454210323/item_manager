@@ -1,4 +1,4 @@
-# Install script for directory: H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild
+# Install script for directory: H:/develop_tool/MyProject/flutter_application/front_app/build/windows/x64/_deps/nuget-subbuild
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "H:/develop_tool/MyProject/flutter_application/front_app/build/windows/x64/_deps/nuget-subbuild/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
