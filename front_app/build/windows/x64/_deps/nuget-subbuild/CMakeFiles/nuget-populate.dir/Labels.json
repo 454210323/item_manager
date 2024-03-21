@@ -1,0 +1,49 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/nuget-populate"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/ce3ce58c08f6aed67793bde8a13f2635/nuget-populate.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/03ea05edc2bf0810396eff4c43a0d0ee/nuget-populate-complete.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/aa93b24d2e013949cc0c9d807bcc98bf/nuget-populate-build.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/aa93b24d2e013949cc0c9d807bcc98bf/nuget-populate-configure.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/aa93b24d2e013949cc0c9d807bcc98bf/nuget-populate-copyfile.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/aa93b24d2e013949cc0c9d807bcc98bf/nuget-populate-download.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/aa93b24d2e013949cc0c9d807bcc98bf/nuget-populate-install.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/aa93b24d2e013949cc0c9d807bcc98bf/nuget-populate-mkdir.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/aa93b24d2e013949cc0c9d807bcc98bf/nuget-populate-patch.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/aa93b24d2e013949cc0c9d807bcc98bf/nuget-populate-test.rule"
+		},
+		{
+			"file" : "H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/CMakeFiles/aa93b24d2e013949cc0c9d807bcc98bf/nuget-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"nuget-populate"
+		],
+		"name" : "nuget-populate"
+	}
+}

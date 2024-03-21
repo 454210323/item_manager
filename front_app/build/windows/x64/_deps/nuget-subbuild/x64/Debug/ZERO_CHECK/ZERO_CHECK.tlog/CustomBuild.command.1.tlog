@@ -1,0 +1,10 @@
+^H:\DEVELOP_TOOL\MYPROJECT\FLUTTER_APPLICATION\BUILD\WINDOWS\X64\_DEPS\NUGET-SUBBUILD\CMAKEFILES\CE3CE58C08F6AED67793BDE8A13F2635\GENERATE.STAMP.RULE
+setlocal
+H:\develop_tool\VisualStudio\VisualStudio\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe -SH:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild -BH:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file H:/develop_tool/MyProject/flutter_application/build/windows/x64/_deps/nuget-subbuild/nuget-populate.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
