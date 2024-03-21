@@ -34,11 +34,12 @@ def create_shipments():
     try:
         new_shipments = []
         for shipment in shipments:
-            if not all(key in shipment for key in ["itemCode", "quantity"]):
+            if not all(key in shipment for key in ["itemCode", "price", "quantity"]):
                 return jsonify({"error": "Missing data in one or more shipments"}), 400
 
             new_shipment = Shipment(
                 item_code=shipment["itemCode"],
+                price=shipment["price"],
                 quantity=shipment["quantity"],
                 shipment_date=datetime.fromisoformat(ship_date),
                 recipient=recipient,

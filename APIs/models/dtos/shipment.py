@@ -6,6 +6,7 @@ class Shipment(db.Model):
 
     id = db.Column(db.BigInteger, primary_key=True)
     item_code = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Numeric(10, 0))
     quantity = db.Column(db.Numeric(10, 0), nullable=False)
     shipment_date = db.Column(db.DateTime, nullable=False)
     recipient = db.Column(db.String(100), nullable=False)
