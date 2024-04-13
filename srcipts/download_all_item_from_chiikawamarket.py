@@ -12,9 +12,14 @@ from base import Session
 from item import Item
 from tqdm import tqdm
 from pathlib import Path
+from urls import (
+    chiikawamarket_all_items_url,
+    naganomarket_all_items_url,
+    chiikawamarket_new_items_url,
+)
 
-base_url = "https://chiikawamarket.jp/collections/all?page={page_num}"
-save_path = "download"
+base_url = chiikawamarket_new_items_url
+save_path = "../APIs/static/images"
 
 
 def find_all_items():
@@ -34,9 +39,9 @@ def find_all_items():
             try:
                 link = item_element.find_element(By.TAG_NAME, "a").get_attribute("href")
                 item_code = link.split("/")[-1]
-
                 item = session.query(Item).get(item_code)
-                if item and Path(f"{save_path}/{name}").exists():
+                image_name = f"{item_code}.jpg"
+                if item and Path(f"{save_path}/{image_name}").exists():
                     continue
 
                 item_name = item_element.find_element(
@@ -46,27 +51,40 @@ def find_all_items():
                 price = find_price(
                     item_element.find_element(By.CLASS_NAME, "product_price").text
                 )
+                if item_code == "4582662954519":
+                    pass
+                if not Path(f"{save_path}/{image_name}").exists():
+                    img_elements = item_element.find_elements(
+                        By.CSS_SELECTOR, ".product--image img"
+                    )
+                    for img_element in img_elements:
+                        image_srcset = img_element.get_attribute("data-srcset")
+                        if image_srcset:
+                            img_src = find_image_src(image_srcset)
+                            break
+                        image_srcset = img_element.get_attribute("srcset")
+                        if image_srcset:
+                            img_src = find_image_src(image_srcset)
+                            break
 
-                name = f"{item_code}.jpg"
-                if not Path(f"{save_path}/{name}").exists():
-                    image_srcset = item_element.find_element(
-                        By.CSS_SELECTOR, ".image--container img"
-                    ).get_attribute("data-srcset")
-                    img_src = find_image_src(image_srcset)
-                    download_image(img_src, f"{save_path}/{name}")
-                item = Item(
-                    item_id=item_code,
-                    item_code=item_code,
-                    item_name=item_name,
-                    item_type="",
-                    series=series,
-                    price=price,
-                )
+                        img_src = img_element.get_attribute("src")
+                        break
+
+                    download_image(img_src, f"{save_path}/{image_name}")
+                if not item:
+                    item = Item(
+                        item_code=item_code,
+                        item_name=item_name,
+                        item_type="",
+                        series=series,
+                        price=price,
+                    )
+                    item_list.append(item)
             except Exception as e:
+                print(e)
                 with open("error_item.txt", "a", encoding="utf-8") as f:
                     f.write(f"{item_code}\n")
                     continue
-            item_list.append(item)
         if item_list:
             session.add_all(item_list)
             session.commit()

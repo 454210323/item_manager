@@ -81,6 +81,11 @@ def _get_stock_shipment_infos():
         )
         .outerjoin(Stock, Item.item_code == Stock.item_code)
         .outerjoin(Shipment, Item.item_code == Shipment.item_code)
+        .group_by(Item.item_code)
+        .having(
+            (func.coalesce(func.sum(Stock.quantity), 0) > 0)
+            | (func.coalesce(func.sum(Shipment.quantity), 0) > 0)
+        )
     )
     if item_code:
         query = query.filter(Item.item_code == item_code)
@@ -88,7 +93,7 @@ def _get_stock_shipment_infos():
         query = query.filter(Item.item_type == item_type)
     if series:
         query = query.filter(Item.series == series)
-    results = query.group_by(Item.item_code).all()
+    results = query.all()
 
     stock_shipment_infos = [
         {
