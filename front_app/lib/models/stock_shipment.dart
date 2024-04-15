@@ -33,40 +33,39 @@ class StockShipment extends Item {
   @override
   Map<String, dynamic> toTableData() {
     return {
+      'image': image,
       'itemCode': itemCode,
       'itemName': itemName,
       'type': type,
       'series': series,
       'price': price,
-      'image': image,
       'stockQuantity': stockQuantity,
       'shipmentQuantity': shipmentQuantity
     };
   }
 
   static const columnsForLargeScreen = [
+    'image',
     'itemCode',
     'itemName',
     'type',
     'series',
     'price',
-    'image',
     'stockQuantity',
     'shipmentQuantity',
   ];
 
   static const columnsForMediumScreen = [
+    'image',
     'itemCode',
     'itemName',
     'type',
     'series',
-    'image',
     'stockQuantity',
     'shipmentQuantity',
   ];
 
   static const columnsForSmallScreen = [
-    'itemName',
     'image',
     'stockQuantity',
     'shipmentQuantity',

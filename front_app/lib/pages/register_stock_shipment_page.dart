@@ -27,9 +27,9 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
   final TextEditingController _itemCodeController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
 
-  final List<String> _modes = ["进货", "出货"];
+  final List<String> _modes = ["出货", "进货"];
 
-  String _selectedMode = "进货";
+  String _selectedMode = "出货";
 
   List<Stock> _preStocks = [];
 
@@ -74,6 +74,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
       );
       if (response.statusCode == 200) {
         showSnackBar(context, 'Registration successful', 'success');
+        _clear();
       } else {
         showSnackBar(context, 'Registration failed', 'error');
       }
@@ -203,25 +204,29 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                 ],
               ),
               const SizedBox(height: 20),
-              _selectedMode == "出货" ? _RecipientSelector() : Container(),
-              Text(
-                '$_selectedMode日: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
-              ),
-              ElevatedButton(
-                child: const Text('选择日期'),
-                onPressed: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: _selectedDate,
-                    firstDate: DateTime(2000),
-                    lastDate: DateTime(2025),
-                  );
-                  if (picked != null && picked != _selectedDate) {
-                    setState(() {
-                      _selectedDate = picked;
-                    });
-                  }
-                },
+              Row(
+                children: [
+                  _selectedMode == "出货" ? _RecipientSelector() : Container(),
+                  Text(
+                    '$_selectedMode日: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
+                  ),
+                  ElevatedButton(
+                    child: const Text('选择日期'),
+                    onPressed: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2025),
+                      );
+                      if (picked != null && picked != _selectedDate) {
+                        setState(() {
+                          _selectedDate = picked;
+                        });
+                      }
+                    },
+                  ),
+                ],
               ),
               const SizedBox(width: 20),
               Row(
@@ -234,6 +239,25 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                     onPressed: _clear,
                     child: const Text('清空'),
                   ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Text("商品种类"),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Text(_preStocks.length.toString()),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  const Text("总数量"),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Text(_preStocks
+                      .fold(0, (sum, element) => sum + element.quantity)
+                      .toString()),
                 ],
               ),
               Expanded(

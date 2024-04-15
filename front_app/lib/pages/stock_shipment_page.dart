@@ -62,7 +62,6 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
             ),
             Expanded(
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
                 child: _StockShipments.isEmpty
                     ? const Text("no data")
                     : SizedBox(
@@ -71,6 +70,7 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
                           data: _StockShipments,
                           visibleColumns: getVisiableColumns(
                               MediaQuery.of(context).size.width),
+                          imageColumnIndex: 0,
                         ),
                       ),
               ),

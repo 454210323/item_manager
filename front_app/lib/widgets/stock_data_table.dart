@@ -20,6 +20,45 @@ class StockDataTable extends StatefulWidget {
 }
 
 class _StockDataTableState extends State<StockDataTable> {
+  Map<String, TextEditingController> _controllers = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _initControllers();
+  }
+
+  void _initControllers() {
+    for (var item in widget.data) {
+      var data = item.toTableData();
+      for (var entry in data.entries) {
+        var key = entry.key;
+        if ('price' == key || 'quantity' == key) {
+          String controllerKey = "${item.itemCode}_$key";
+          if (!_controllers.containsKey(controllerKey)) {
+            _controllers[controllerKey] =
+                TextEditingController(text: entry.value.toString());
+          } else {
+            if ('price' == key) {
+              _controllers[controllerKey]!.value =
+                  TextEditingValue(text: item.price.toString());
+            }
+            if ('quantity' == key) {
+              _controllers[controllerKey]!.value =
+                  TextEditingValue(text: item.quantity.toString());
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _controllers.forEach((_, controller) => controller.dispose());
+    super.dispose();
+  }
+
   List<DataColumn> _itemTableColumns() {
     if (widget.data.isEmpty) {
       return [];
@@ -35,13 +74,16 @@ class _StockDataTableState extends State<StockDataTable> {
   }
 
   List<DataRow> _itemTableRows() {
+    _initControllers();
     return widget.data.map((item) {
       var data = item.toTableData();
       var cells = data.entries.map((entry) {
         var key = entry.key;
         var value = entry.value;
+        String controllerKey = "${item.itemCode}_$key";
+
         if ('price' == key || 'quantity' == key) {
-          var controller = TextEditingController(text: value.toString());
+          final controller = _controllers[controllerKey]!;
           return DataCell(TextField(
             controller: controller,
             decoration: InputDecoration(
@@ -51,11 +93,12 @@ class _StockDataTableState extends State<StockDataTable> {
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             onChanged: (newValue) {
+              controller.value = TextEditingValue(text: newValue);
               if ('price' == key) {
-                item.price = Decimal.tryParse(newValue)!;
+                item.price = Decimal.tryParse(newValue) ?? Decimal.fromInt(0);
               }
               if ('quantity' == key) {
-                item.quantity = int.tryParse(newValue)!;
+                item.quantity = int.tryParse(newValue) ?? 0;
               }
               widget.onChanged(widget.data);
             },

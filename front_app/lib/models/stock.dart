@@ -20,7 +20,7 @@ class Stock extends TableItem {
   Map<String, dynamic> toTableData() {
     return {
       // 'itemCode': itemCode,
-      'itemName': itemName,
+      // 'itemName': itemName,
       'image': image,
       'price': price.toString(),
       'quantity': quantity

@@ -13,8 +13,8 @@ class DynamicDataTable extends StatefulWidget {
       {super.key,
       required this.data,
       this.visibleColumns = const [],
-      this.interactiveColumnIndex = 0,
-      this.imageColumnIndex = 0});
+      this.interactiveColumnIndex = -1,
+      this.imageColumnIndex = -1});
 
   @override
   State<DynamicDataTable> createState() => _DynamicDataTableState();
@@ -113,7 +113,7 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
               );
             },
           );
-        } else if (widget.imageColumnIndex != 0 &&
+        } else if (widget.imageColumnIndex != -1 &&
             e.key == widget.imageColumnIndex) {
           return DataCell(Container(
             alignment: Alignment.centerLeft,

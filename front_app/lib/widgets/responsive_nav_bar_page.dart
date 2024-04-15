@@ -41,17 +41,17 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
                   icon: const Icon(Icons.menu),
                   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                 ),
-          title: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          title: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   AppConst.appName,
                   style: TextStyle(
                       color: Colors.green, fontWeight: FontWeight.bold),
                 ),
-                if (isLargeScreen) Expanded(child: _navBarItems())
+                // if (isLargeScreen) Expanded(child: _navBarItems())
               ],
             ),
           ),
@@ -66,31 +66,48 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
             ),
           ],
         ),
-        drawer: isLargeScreen ? null : _drawer(),
+        // drawer: isLargeScreen ? null : _drawer(),
+        drawer: _drawer(),
         body: _currentPageContent(_selectedMenuItem));
   }
 
   Widget _drawer() => Drawer(
         child: ListView(
-          children: AppConst.menuItems.map(_buildMenuItem).toList(),
+          children: AppConst.menuItems
+              .map((item) => _buildMenuItem(item, isDraw: true))
+              .toList(),
         ),
       );
 
-  Widget _buildMenuItem(MenuItem item) {
+  Widget _buildMenuItem(MenuItem item, {bool isDraw = false}) {
     if (item.subItems != null && item.subItems!.isNotEmpty) {
       return CustomExpansionTile(
         title: item.title,
-        children: item.subItems!.map(_buildMenuItem).toList(),
+        children: item.subItems!
+            .map((item) => _buildMenuItem(item, isDraw: isDraw))
+            .toList(),
       );
-    } else {
+    } else if (isDraw) {
       return ListTile(
-          title: Text(item.title),
+          title: Text(item.title, style: const TextStyle(fontSize: 18)),
           onTap: () {
             Navigator.of(context).pop();
             setState(() {
               _selectedMenuItem = item.title;
             });
           });
+    } else {
+      return InkWell(
+        onTap: () {
+          setState(() {
+            _selectedMenuItem = item.title;
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16),
+          child: Text(item.title, style: const TextStyle(fontSize: 18)),
+        ),
+      );
     }
   }
 
@@ -98,20 +115,7 @@ class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: AppConst.menuItems
-            .map(
-              (item) => InkWell(
-                onTap: () {
-                  setState(() {
-                    _selectedMenuItem = item.title;
-                  });
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 24.0, horizontal: 16),
-                  child: Text(item.title, style: const TextStyle(fontSize: 18)),
-                ),
-              ),
-            )
+            .map((item) => SizedBox(width: 100, child: _buildMenuItem(item)))
             .toList(),
       );
 }

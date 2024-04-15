@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import '../constants.dart';
 import '../models/item.dart';
+import '../widgets/barcode_scanner.dart';
 import '../widgets/show_snack_bar.dart';
 
 class UpdateItemPage extends StatefulWidget {
@@ -115,12 +116,31 @@ class _UpdateItemPageState extends State<UpdateItemPage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              TextField(
-                enabled: widget.itemCode.isEmpty,
-                controller: _itemCodeController,
-                decoration: const InputDecoration(labelText: '商品编号'),
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp("[a-z]|[0-9]")),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      enabled: widget.itemCode.isEmpty,
+                      controller: _itemCodeController,
+                      decoration: const InputDecoration(labelText: '商品编号'),
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.allow(
+                            RegExp("[a-z]|[0-9]")),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: widget.itemCode.isEmpty
+                        ? () async {
+                            String result = await BarcodeScanner.scanBarcode();
+                            if (!mounted) return;
+                            setState(() {
+                              _itemCodeController.text = result;
+                            });
+                          }
+                        : null,
+                    child: const Text('Scan'),
+                  )
                 ],
               ),
               TextField(
