@@ -7,7 +7,7 @@ import 'barcode_scanner.dart';
 import 'drop_down.dart';
 
 class SearchForm extends StatefulWidget {
-  final void Function(String, String, String) onSearch;
+  final void Function(String, String, String, String) onSearch;
 
   const SearchForm({super.key, required this.onSearch});
 
@@ -17,6 +17,7 @@ class SearchForm extends StatefulWidget {
 
 class _SearchFormState extends State<SearchForm> {
   final TextEditingController _itemCodeController = TextEditingController();
+  final TextEditingController _itemNameController = TextEditingController();
   String _selectedItemType = '';
   String _selectedItemSeries = '';
   List<String> _itemTypes = [];
@@ -62,6 +63,7 @@ class _SearchFormState extends State<SearchForm> {
   void _onSearchPressed() {
     widget.onSearch(
       _itemCodeController.text,
+      _itemNameController.text,
       _selectedItemType,
       _selectedItemSeries,
     );
@@ -88,6 +90,11 @@ class _SearchFormState extends State<SearchForm> {
               },
               child: const Text('Scan'),
             ),
+            Expanded(
+                child: TextField(
+              decoration: const InputDecoration(labelText: 'Item Name'),
+              controller: _itemNameController,
+            ))
           ],
         ),
         Row(

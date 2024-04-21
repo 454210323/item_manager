@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 import '../models/stock_shipment.dart';
+import '../widgets/drop_down.dart';
 import '../widgets/dynamic_data_table.dart';
 
 class StockShipmentPage extends StatefulWidget {
@@ -17,13 +18,33 @@ class StockShipmentPage extends StatefulWidget {
 
 class _StockShipmentPageState extends State<StockShipmentPage> {
   List<StockShipment> _StockShipments = [];
+  String _shipmentDate = '';
+  List<String> _shipmentDates = [];
 
-  Future<void> _onSearch(
-      String itemCode, String itemType, String itemSerise) async {
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    var shipmentDateResponse = await http.get(Uri.parse(API.SHIPMENT_DATE));
+    if (shipmentDateResponse.statusCode == 200) {
+      setState(() {
+        _shipmentDates = List<String>.from(
+            json.decode(shipmentDateResponse.body)['shipment_dates']);
+      });
+    }
+  }
+
+  Future<void> _onSearch(String itemCode, String itemName, String itemType,
+      String itemSerise) async {
     var url = Uri.parse(API.STOCK_SHIPMENT_INFOS).replace(queryParameters: {
       'itemCode': itemCode,
+      'itemName': itemName,
       'itemType': itemType,
       'itemSeries': itemSerise,
+      'shipmentDate': _shipmentDate
     });
 
     var response = await http.get(url);
@@ -57,6 +78,15 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
+            const Text("出货日期/批次"),
+            CustomDropdownButton(
+                hint: "Date",
+                options: _shipmentDates,
+                onSelected: (value) {
+                  setState(() {
+                    _shipmentDate = value;
+                  });
+                }),
             SearchForm(
               onSearch: _onSearch,
             ),

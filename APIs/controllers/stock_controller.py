@@ -5,7 +5,7 @@ from models.dtos.item import Item
 from database import db
 from models.dtos.shipment import Shipment
 from models.dtos.stock import Stock
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 
 bp_stock = Blueprint("stock", __name__, url_prefix="/Stock")
@@ -67,8 +67,10 @@ def items_summary():
 @bp_stock.route("/StockShipmentInfos", methods=["GET"])
 def _get_stock_shipment_infos():
     item_code = request.args.get("itemCode")
+    item_name = request.args.get("itemName")
     item_type = request.args.get("itemType")
-    series = request.args.get("series")
+    series = request.args.get("itemSeries")
+    shipment_date = request.args.get("shipmentDate")
     query = (
         db.session.query(
             Item.item_code,
@@ -89,10 +91,19 @@ def _get_stock_shipment_infos():
     )
     if item_code:
         query = query.filter(Item.item_code == item_code)
+    if item_name:
+        query = query.filter(Item.item_name.like(f"%{item_name}%"))
     if item_type:
         query = query.filter(Item.item_type == item_type)
     if series:
         query = query.filter(Item.series == series)
+    if shipment_date:
+        start_of_day = datetime.fromisoformat(shipment_date)
+        end_of_day = start_of_day + timedelta(days=1) - timedelta(seconds=1)
+
+        query = query.filter(
+            Shipment.shipment_date >= start_of_day, Shipment.shipment_date <= end_of_day
+        )
     results = query.all()
 
     stock_shipment_infos = [

@@ -68,6 +68,10 @@ class API {
 
   // Shipment Base Url
   static const SHIPMENT_BASE = "${BASE_URL}Shipment/";
+
+  // Shipment Date
+  static const SHIPMENT_DATE = "${SHIPMENT_BASE}ShipmentDate";
+
   // Shipment (POST)
   static const SHIPMENT = "${SHIPMENT_BASE}Shipment";
   // Recipient (GET)

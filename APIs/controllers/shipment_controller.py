@@ -54,3 +54,27 @@ def create_shipments():
     except Exception as e:
         print(str(e))
         return jsonify({"error": str(e)}), 500
+
+
+@shipment_blueprint.route("ShipmentDate", methods=["GET"])
+def _get_shipment_date():
+    # shipment_dates = [
+    #     shipment_date.strftime("%Y-%m-%d")
+    #     for shipment_date in db.session.query(Shipment.shipment_date).distinct().all()
+    # ]
+    shipment_dates = list(
+        set(
+            [
+                shipment_date_set[0].strftime("%Y-%m-%d")
+                for shipment_date_set in db.session.query(Shipment.shipment_date)
+                .distinct()
+                .all()
+            ]
+        )
+    )
+    shipment_dates.sort()
+
+    return (
+        jsonify(shipment_dates=shipment_dates),
+        200,
+    )

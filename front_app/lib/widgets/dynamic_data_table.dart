@@ -115,35 +115,61 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
           );
         } else if (widget.imageColumnIndex != -1 &&
             e.key == widget.imageColumnIndex) {
-          return DataCell(Container(
-            alignment: Alignment.centerLeft,
-            // 使用Image.network来加载并显示网络图片
-            child: Image.network(
-              e.value.toString(),
-              // 你可以根据需要设置宽度和高度
-              width: 40,
-              height: 40,
-              // 设置图片加载过程中的占位符
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  alignment: Alignment.centerLeft,
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-              // 设置图片加载失败时的占位图
-              errorBuilder: (BuildContext context, Object exception,
-                  StackTrace? stackTrace) {
-                return const Text('加载失败');
-              },
-            ),
-          ));
+          return DataCell(
+              Container(
+                alignment: Alignment.centerLeft,
+                // 使用Image.network来加载并显示网络图片
+                child: Image.network(
+                  e.value.toString(),
+                  // 你可以根据需要设置宽度和高度
+                  width: 40,
+                  height: 40,
+                  // 设置图片加载过程中的占位符
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      alignment: Alignment.centerLeft,
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                  // 设置图片加载失败时的占位图
+                  errorBuilder: (BuildContext context, Object exception,
+                      StackTrace? stackTrace) {
+                    return const Text('加载失败');
+                  },
+                ),
+              ), onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: Image.network(
+                      e.value.toString(),
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: MediaQuery.of(context).size.height / 2,
+                      loadingBuilder: (BuildContext context, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) return child;
+                        return Container(
+                          alignment: Alignment.centerLeft,
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                });
+          });
         } else {
           return DataCell(Text(e.value.toString()));
         }
