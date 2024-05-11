@@ -149,24 +149,27 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    content: Image.network(
-                      e.value.toString(),
-                      width: MediaQuery.of(context).size.width / 2,
-                      height: MediaQuery.of(context).size.height / 2,
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Container(
-                          alignment: Alignment.centerLeft,
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        );
-                      },
-                    ),
+                    content: Column(children: [
+                      Image.network(
+                        e.value.toString(),
+                        width: MediaQuery.of(context).size.width / 2,
+                        height: MediaQuery.of(context).size.height / 2,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            alignment: Alignment.centerLeft,
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
+                      Text(item.itemName),
+                    ]),
                   );
                 });
           });

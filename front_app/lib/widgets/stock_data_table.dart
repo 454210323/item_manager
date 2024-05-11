@@ -104,32 +104,66 @@ class _StockDataTableState extends State<StockDataTable> {
             },
           ));
         } else if ('image' == key) {
-          return DataCell(Container(
-            alignment: Alignment.centerLeft,
-            child: Image.network(
-              value,
-              width: 40,
-              height: 40,
-              loadingBuilder: (BuildContext context, Widget child,
-                  ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  alignment: Alignment.centerLeft,
-                  child: CircularProgressIndicator(
-                    value: loadingProgress.expectedTotalBytes != null
-                        ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
-                        : null,
-                  ),
-                );
-              },
-              // 设置图片加载失败时的占位图
-              errorBuilder: (BuildContext context, Object exception,
-                  StackTrace? stackTrace) {
-                return const Text('加载失败');
-              },
-            ),
-          ));
+          return DataCell(
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Image.network(
+                  value,
+                  width: 40,
+                  height: 40,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      alignment: Alignment.centerLeft,
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                  // 设置图片加载失败时的占位图
+                  errorBuilder: (BuildContext context, Object exception,
+                      StackTrace? stackTrace) {
+                    return const Text('加载失败');
+                  },
+                ),
+              ), onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Column(
+                    children: [
+                      AlertDialog(
+                        content: Column(children: [
+                          Image.network(
+                            value,
+                            width: MediaQuery.of(context).size.width / 2,
+                            height: MediaQuery.of(context).size.height / 2,
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                alignment: Alignment.centerLeft,
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                          ),
+                          Text(item.itemName),
+                        ]),
+                      ),
+                    ],
+                  );
+                });
+          });
         } else {
           return DataCell(Text(value.toString()));
         }
