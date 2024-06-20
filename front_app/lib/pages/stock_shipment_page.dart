@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/widgets/search_form.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 import '../constants.dart';
 import '../models/stock_shipment.dart';
-import '../widgets/drop_down.dart';
 import '../widgets/dynamic_data_table.dart';
 
 class StockShipmentPage extends StatefulWidget {
@@ -18,24 +18,8 @@ class StockShipmentPage extends StatefulWidget {
 
 class _StockShipmentPageState extends State<StockShipmentPage> {
   List<StockShipment> _StockShipments = [];
-  String _shipmentDate = '';
-  List<String> _shipmentDates = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchData();
-  }
-
-  Future<void> _fetchData() async {
-    var shipmentDateResponse = await http.get(Uri.parse(API.SHIPMENT_DATE));
-    if (shipmentDateResponse.statusCode == 200) {
-      setState(() {
-        _shipmentDates = List<String>.from(
-            json.decode(shipmentDateResponse.body)['shipment_dates']);
-      });
-    }
-  }
+  DateTime _startDay = DateTime.now();
+  DateTime _endDay = DateTime.now();
 
   Future<void> _onSearch(String itemCode, String itemName, String itemType,
       String itemSerise) async {
@@ -44,7 +28,8 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
       'itemName': itemName,
       'itemType': itemType,
       'itemSeries': itemSerise,
-      'shipmentDate': _shipmentDate
+      'startDay': _startDay.toIso8601String(),
+      'endDay': _endDay.toIso8601String()
     });
 
     var response = await http.get(url);
@@ -78,15 +63,43 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: <Widget>[
-            const Text("出货日期/批次"),
-            CustomDropdownButton(
-                hint: "Date",
-                options: _shipmentDates,
-                onSelected: (value) {
-                  setState(() {
-                    _shipmentDate = value;
-                  });
-                }),
+            const Text("选择出货期间"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  child: Text(DateFormat('yyyy-MM-dd').format(_startDay)),
+                  onPressed: () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2030),
+                    );
+                    if (picked != null && picked != _startDay) {
+                      setState(() {
+                        _startDay = picked;
+                      });
+                    }
+                  },
+                ),
+                const Icon(Icons.arrow_right_outlined),
+                ElevatedButton(
+                  child: Text(DateFormat('yyyy-MM-dd').format(_endDay)),
+                  onPressed: () async {
+                    final DateTime? picked = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2030),
+                    );
+                    if (picked != null && picked != _endDay) {
+                      setState(() {
+                        _endDay = picked;
+                      });
+                    }
+                  },
+                ),
+              ],
+            ),
             SearchForm(
               onSearch: _onSearch,
             ),

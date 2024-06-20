@@ -217,7 +217,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                         context: context,
                         initialDate: _selectedDate,
                         firstDate: DateTime(2000),
-                        lastDate: DateTime(2025),
+                        lastDate: DateTime(2030),
                       );
                       if (picked != null && picked != _selectedDate) {
                         setState(() {

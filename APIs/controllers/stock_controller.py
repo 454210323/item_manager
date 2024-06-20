@@ -128,8 +128,8 @@ def _get_stock_shipment_infos_v2():
     item_name = request.args.get("itemName")
     item_type = request.args.get("itemType")
     series = request.args.get("itemSeries")
-    shipment_date_from = request.args.get("shipmentDateFrom")
-    shipment_date_to = request.args.get("shipmentDateTo")
+    start_day = request.args.get("startDay")
+    end_day = request.args.get("endDay")
     query = (
         db.session.query(
             Item.item_code,
@@ -156,14 +156,12 @@ def _get_stock_shipment_infos_v2():
         query = query.filter(Item.item_type == item_type)
     if series:
         query = query.filter(Item.series == series)
-    if shipment_date_from and shipment_date_to:
-        start_of_day = datetime.fromisoformat(shipment_date_from)
-        end_of_day = datetime.fromisoformat(shipment_date_to)
-
-        query = query.filter(
-            Shipment.shipment_date >= start_of_day, Shipment.shipment_date <= end_of_day
-        )
-    if shipment_date_from 
+    if start_day:
+        start_of_day = datetime.fromisoformat(start_day)
+        query = query.filter(Shipment.shipment_date >= start_of_day)
+    if end_day:
+        end_of_day = datetime.fromisoformat(end_day)
+        query = query.filter(Shipment.shipment_date <= end_of_day)
     results = query.all()
 
     stock_shipment_infos = [

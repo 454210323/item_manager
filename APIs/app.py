@@ -12,6 +12,7 @@ from controllers import (
     stub_controller,
 )
 
+
 app = Flask(__name__)
 CORS(app)
 app.config.from_object(DevelopmentConfig)
