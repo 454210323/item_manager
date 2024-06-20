@@ -4,6 +4,8 @@ from sqlalchemy.orm.exc import NoResultFound
 from models.dtos.item import Item
 from database import db
 import logging
+import os
+from pathlib import Path
 
 bp_item = Blueprint("item", __name__, url_prefix="/Item")
 
@@ -28,7 +30,10 @@ def _get_item_by_item_code():
 
 @bp_item.route("/Item", methods=["POST"])
 def _register_item():
-    data = request.json
+    data = request.form
+
+    file = request.files.get("image")
+
     try:
         new_item = Item(
             item_code=data["itemCode"],
@@ -37,6 +42,18 @@ def _register_item():
             series=data["series"],
             price=data["price"],
         )
+
+        if file:
+            print(Path("../static").exists())
+            print(Path("../static/images").exists())
+
+            filename = data["itemCode"] + ".jpg"
+            file.save(
+                os.path.join(
+                    os.path.dirname(__file__), "..", "static", "images", filename
+                )
+            )
+
         db.session.add(new_item)
         db.session.commit()
         return jsonify({"message": "Item added successfully"}), 200
@@ -73,6 +90,7 @@ def _update_item():
 
 @bp_item.route("/Type/all")
 def _get_all_types():
+
     item_types = [
         item_type_set[0]
         for item_type_set in db.session.query(Item.item_type).distinct().all()

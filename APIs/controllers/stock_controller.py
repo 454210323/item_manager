@@ -120,3 +120,63 @@ def _get_stock_shipment_infos():
     ]
 
     return jsonify({"stock_shipment_infos": stock_shipment_infos}), 200
+
+
+@bp_stock.route("/v2/StockShipmentInfos", methods=["GET"])
+def _get_stock_shipment_infos_v2():
+    item_code = request.args.get("itemCode")
+    item_name = request.args.get("itemName")
+    item_type = request.args.get("itemType")
+    series = request.args.get("itemSeries")
+    shipment_date_from = request.args.get("shipmentDateFrom")
+    shipment_date_to = request.args.get("shipmentDateTo")
+    query = (
+        db.session.query(
+            Item.item_code,
+            Item.item_name,
+            Item.item_type,
+            Item.series,
+            Item.price,
+            func.coalesce(func.sum(Stock.quantity), 0).label("total_stock"),
+            func.coalesce(func.sum(Shipment.quantity), 0).label("total_shipment"),
+        )
+        .outerjoin(Stock, Item.item_code == Stock.item_code)
+        .outerjoin(Shipment, Item.item_code == Shipment.item_code)
+        .group_by(Item.item_code)
+        .having(
+            (func.coalesce(func.sum(Stock.quantity), 0) > 0)
+            | (func.coalesce(func.sum(Shipment.quantity), 0) > 0)
+        )
+    )
+    if item_code:
+        query = query.filter(Item.item_code == item_code)
+    if item_name:
+        query = query.filter(Item.item_name.like(f"%{item_name}%"))
+    if item_type:
+        query = query.filter(Item.item_type == item_type)
+    if series:
+        query = query.filter(Item.series == series)
+    if shipment_date_from and shipment_date_to:
+        start_of_day = datetime.fromisoformat(shipment_date_from)
+        end_of_day = datetime.fromisoformat(shipment_date_to)
+
+        query = query.filter(
+            Shipment.shipment_date >= start_of_day, Shipment.shipment_date <= end_of_day
+        )
+    if shipment_date_from 
+    results = query.all()
+
+    stock_shipment_infos = [
+        {
+            "item_code": item.item_code,
+            "item_name": item.item_name,
+            "item_type": item.item_type,
+            "series": item.series,
+            "price": item.price,
+            "stock_quantity": item.total_stock,
+            "shipment_quantity": item.total_shipment,
+        }
+        for item in results
+    ]
+
+    return jsonify({"stock_shipment_infos": stock_shipment_infos}), 200

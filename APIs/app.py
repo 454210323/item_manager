@@ -3,6 +3,7 @@ from config import DevelopmentConfig
 from database import db
 from flask_cors import CORS
 
+
 from controllers import (
     item_controller,
     extra_expense_controller,

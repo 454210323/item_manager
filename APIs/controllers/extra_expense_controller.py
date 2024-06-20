@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional, Union, Any
 from flask import Blueprint, jsonify, request
-from models.dtos.extra_expense import ExtraExpense, ExtraExpenseSchema
+from models.dtos.extra_expense import ExtraExpense
 from database import db
 import logging
 

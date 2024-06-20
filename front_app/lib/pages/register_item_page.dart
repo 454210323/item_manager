@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:decimal/decimal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:mime/mime.dart';
 
 import '../constants.dart';
 import '../widgets/barcode_scanner.dart';
@@ -23,6 +27,8 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
   final TextEditingController _itemTypeController = TextEditingController();
   final TextEditingController _seriesController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  File? _imageFile;
 
   bool _isLoading = false;
 
@@ -30,6 +36,17 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
   void initState() {
     super.initState();
     _itemCodeController.text = widget.itemCode;
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    setState(() {
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      } else {
+        showSnackBar(context, 'No image selected', 'error');
+      }
+    });
   }
 
   Future<void> _submitData() async {
@@ -45,20 +62,22 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
       _isLoading = true;
     });
     try {
-      final response = await http.post(
-        Uri.parse(API.ITEM),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'itemCode': _itemCodeController.text,
-          'itemName': _itemNameController.text,
-          'itemType': _itemTypeController.text,
-          'series': _seriesController.text,
-          'price': Decimal.parse(_priceController.text),
-        }),
-      );
+      final request = http.MultipartRequest('POST', Uri.parse(API.ITEM));
+      request.fields['itemCode'] = _itemCodeController.text;
+      request.fields['itemName'] = _itemNameController.text;
+      request.fields['itemType'] = _itemTypeController.text;
+      request.fields['series'] = _seriesController.text;
+      request.fields['price'] = Decimal.parse(_priceController.text).toString();
+      String mimeType =
+          lookupMimeType(_imageFile!.path) ?? 'application/octet-stream';
+      List<String> mimeTypes = mimeType.split('/');
 
+      request.files.add(await http.MultipartFile.fromPath(
+        'image',
+        _imageFile!.path,
+        contentType: MediaType(mimeTypes[0], mimeTypes[1]),
+      ));
+      final response = await request.send();
       if (response.statusCode == 200) {
         showSnackBar(context, 'Registration successful', 'success');
       } else {
@@ -126,6 +145,26 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
                   FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                 ],
                 controller: _priceController,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: _pickImage,
+                    // onPressed: () {},
+                    child: const Text('添加图片'),
+                  ),
+                  _imageFile == null
+                      ? Container()
+                      : Image.file(
+                          _imageFile!,
+                          width: 100,
+                          height: 100,
+                        ),
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

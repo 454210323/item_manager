@@ -5,7 +5,7 @@ class Config:
     DEBUG = False
     TESTING = False
     SECRET_KEY = "your-secret-key"
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:admin@localhost/dev"
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = True
 

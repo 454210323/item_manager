@@ -1,5 +1,4 @@
 from database import db
-from marshmallow import Schema, fields
 
 
 class ExtraExpenseType(db.Model):
