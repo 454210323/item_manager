@@ -66,6 +66,8 @@ class API {
   // Stock Shipemnt List (GET)
   static const STOCK_SHIPMENT_INFOS = "${STOCK_BASE}StockShipmentInfos";
 
+  static const STOCK_SHIPMENT_INFOS_V2 = "${STOCK_BASE}v2/StockShipmentInfos";
+
   // Shipment Base Url
   static const SHIPMENT_BASE = "${BASE_URL}Shipment/";
 

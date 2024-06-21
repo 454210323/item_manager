@@ -23,7 +23,7 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
 
   Future<void> _onSearch(String itemCode, String itemName, String itemType,
       String itemSerise) async {
-    var url = Uri.parse(API.STOCK_SHIPMENT_INFOS).replace(queryParameters: {
+    var url = Uri.parse(API.STOCK_SHIPMENT_INFOS_V2).replace(queryParameters: {
       'itemCode': itemCode,
       'itemName': itemName,
       'itemType': itemType,
