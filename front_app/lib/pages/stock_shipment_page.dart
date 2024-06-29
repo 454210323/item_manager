@@ -18,7 +18,7 @@ class StockShipmentPage extends StatefulWidget {
 
 class _StockShipmentPageState extends State<StockShipmentPage> {
   List<StockShipment> _StockShipments = [];
-  DateTime _startDay = DateTime.now();
+  DateTime _startDay = DateTime(2023);
   DateTime _endDay = DateTime.now();
 
   Future<void> _onSearch(String itemCode, String itemName, String itemType,
@@ -32,16 +32,20 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
       'endDay': _endDay.toIso8601String()
     });
 
-    var response = await http.get(url);
+    try {
+      var response = await http.get(url);
 
-    if (response.statusCode == 200) {
-      var data = json.decode(response.body)['stock_shipment_infos'];
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body)['stock_shipment_infos'];
 
-      setState(() {
-        _StockShipments = data
-            .map<StockShipment>((json) => StockShipment.fromJson(json))
-            .toList();
-      });
+        setState(() {
+          _StockShipments = data
+              .map<StockShipment>((json) => StockShipment.fromJson(json))
+              .toList();
+        });
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 

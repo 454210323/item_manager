@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-connection_url = "mysql+pymysql://root:admin@localhost:3306/dev"
+connection_url = "postgresql://postgres:f8C6iqwSekLbtRM@localhost:5432/postgres"
 
 engine = create_engine(connection_url, echo=True)
 Base.metadata.create_all(engine)

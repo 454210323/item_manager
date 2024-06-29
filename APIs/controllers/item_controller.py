@@ -4,10 +4,12 @@ from sqlalchemy.orm.exc import NoResultFound
 from models.dtos.item import Item
 from database import db
 import logging
+import requests
 import os
-from pathlib import Path
 
 bp_item = Blueprint("item", __name__, url_prefix="/Item")
+
+STATIC_RESOURCE_URL = os.getenv("STATIC_RESOURCE_URL")
 
 
 @bp_item.route("/Item/all")
@@ -44,15 +46,15 @@ def _register_item():
         )
 
         if file:
-            print(Path("../static").exists())
-            print(Path("../static/images").exists())
 
-            filename = data["itemCode"] + ".jpg"
-            file.save(
-                os.path.join(
-                    os.path.dirname(__file__), "..", "static", "images", filename
-                )
+            response = requests.post(
+                f"{STATIC_RESOURCE_URL}/upload",
+                files={"image": file},
+                data={"item_code": data["itemCode"]},
             )
+
+            if response.status_code != 200:
+                raise Exception(response.json())
 
         db.session.add(new_item)
         db.session.commit()

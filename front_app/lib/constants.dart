@@ -27,7 +27,9 @@ class ScreenConst {
 }
 
 class API {
-  static const BASE_URL = "https://www233-item-manager.fly.dev/";
+  static const STATIC_RESOURCE_URL = "http://192.168.0.126:5001/";
+
+  static const BASE_URL = "http://192.168.0.126:5000/";
 
   // Item Base Url
   static const ITEM_BASE = "${BASE_URL}Item/";
@@ -47,7 +49,7 @@ class API {
   static const ITEM_CONDITIONS = "${ITEM_BASE}Conditions";
 
   // Item image
-  static const ITEM_IMAGE = "${BASE_URL}static/images/";
+  static const ITEM_IMAGE = "${STATIC_RESOURCE_URL}static/images/";
 
   // Extra Expense Base Url
   static const EXTRA_EXPENSE_BASE = "${BASE_URL}ExtraExpense/";
