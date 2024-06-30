@@ -39,14 +39,40 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
   }
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
-    setState(() {
-      if (pickedFile != null) {
-        _imageFile = File(pickedFile.path);
-      } else {
-        showSnackBar(context, 'No image selected', 'error');
-      }
-    });
+    final ImageSource? source = await showDialog<ImageSource>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select the image source'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Camera'),
+              onPressed: () {
+                Navigator.pop(context, ImageSource.camera);
+              },
+            ),
+            TextButton(
+              child: Text('Gallery'),
+              onPressed: () {
+                Navigator.pop(context, ImageSource.gallery);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (source != null) {
+      final pickedFile = await _picker.pickImage(source: source);
+      if (!mounted) return; // 检查是否挂载
+      setState(() {
+        if (pickedFile != null) {
+          _imageFile = File(pickedFile.path);
+        } else {
+          showSnackBar(context, 'No image selected', 'error');
+        }
+      });
+    }
   }
 
   Future<void> _submitData() async {

@@ -3,6 +3,7 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 # 定义静态文件夹路径
 UPLOAD_FOLDER = "static/images"

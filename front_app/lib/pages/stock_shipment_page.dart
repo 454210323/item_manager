@@ -62,7 +62,7 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Stock and Shipment")),
+      appBar: AppBar(title: const Text(ScreenConst.STOCK_SHIPMENT)),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(

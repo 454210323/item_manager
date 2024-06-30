@@ -49,7 +49,7 @@ def _register_item():
 
             response = requests.post(
                 f"{STATIC_RESOURCE_URL}/upload",
-                files={"image": file},
+                files={"file": file},
                 data={"item_code": data["itemCode"]},
             )
 

@@ -7,10 +7,10 @@ from flask_cors import CORS
 from controllers import (
     item_controller,
     extra_expense_controller,
+    online_store_controller,
     stock_controller,
     shipment_controller,
     stub_controller,
-    online_item_monitoring_controller,
 )
 
 
@@ -24,6 +24,6 @@ app.register_blueprint(extra_expense_controller.bp_extra_expense)
 app.register_blueprint(stock_controller.bp_stock)
 app.register_blueprint(shipment_controller.shipment_blueprint)
 app.register_blueprint(stub_controller.bp_stub)
-app.register_blueprint(online_item_monitoring_controller.bp_stock_monitoring)
+app.register_blueprint(online_store_controller.bp_online_store)
 if __name__ == "__main__":
     app.run(host="0.0.0.0")

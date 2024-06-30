@@ -11,7 +11,7 @@ class AppConst {
       // MenuItem(ScreenConst.REGISTER_SHIPMENT)
     ]),
     MenuItem(ScreenConst.EXTRA_EXPENSE),
-    MenuItem(ScreenConst.TEST_PAGE),
+    MenuItem(ScreenConst.STOCK_MONITORING),
   ];
 }
 
@@ -23,13 +23,13 @@ class ScreenConst {
   static const REGISTER_STOCK_SHIPMENT = "添加进货出货";
   // static const REGISTER_SHIPMENT = "增加出货";
   static const EXTRA_EXPENSE = "额外消费";
-  static const TEST_PAGE = "测试画面";
+  static const STOCK_MONITORING = "官网库存监控";
 }
 
 class API {
-  static const STATIC_RESOURCE_URL = "http://192.168.0.126:5001/";
+  static const STATIC_RESOURCE_URL = "https://static-resource.fly.dev/";
 
-  static const BASE_URL = "http://192.168.0.126:5000/";
+  static const BASE_URL = "https://www233-item-manager.fly.dev/";
 
   // Item Base Url
   static const ITEM_BASE = "${BASE_URL}Item/";
@@ -80,4 +80,13 @@ class API {
   static const SHIPMENT = "${SHIPMENT_BASE}Shipment";
   // Recipient (GET)
   static const Recipients = "${SHIPMENT_BASE}Recipient/all";
+
+  // Online Store
+  static const ONLINE_STORE_BASE = "${BASE_URL}OnlineStore/";
+
+  // Favorite item
+  static const FAVORITE_ITEM = "${ONLINE_STORE_BASE}Favorite";
+
+  // Stock Monitoring
+  static const STOCK_MONITORING = "${ONLINE_STORE_BASE}StockMonitoring";
 }
