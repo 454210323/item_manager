@@ -33,7 +33,7 @@ class _StockMonitoringPageState extends State<StockMonitoringPage> {
         Uri.parse(API.FAVORITE_ITEM),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode(<String, dynamic>{
-          'item_code': _itemCodeController.text,
+          'itemCode': _itemCodeController.text,
         }),
       );
       if (response.statusCode == 200) {

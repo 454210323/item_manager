@@ -29,7 +29,7 @@ class ScreenConst {
 class API {
   static const STATIC_RESOURCE_URL = "https://static-resource.fly.dev/";
 
-  static const BASE_URL = "https://www233-item-manager.fly.dev/";
+  static const BASE_URL = "http://192.168.0.126:5000/";
 
   // Item Base Url
   static const ITEM_BASE = "${BASE_URL}Item/";

@@ -27,7 +27,10 @@ def fetch_stock(item_code: str):
 
 @bp_online_store.route("/Favorite", methods=["POST"])
 def _add_favorite_item():
-    item_code = request.json.get("item_code")
+    """
+    添加商品到关注列表，以监控在官网的库存情况
+    """
+    item_code = request.json.get("itemCode")
     stock_quantity = fetch_stock(item_code)
     check_time = datetime.now()
     favorite_item = FavoriteItem(
@@ -43,7 +46,9 @@ def _add_favorite_item():
 
 @bp_online_store.route("/StockMonitoring", methods=["GET"])
 def _stock_monitoring():
-
+    """
+    取得关注商品的最新库存
+    """
     item_codes = [
         result[0]
         for result in db.session.query(FavoriteItem.item_code).distinct().all()
@@ -66,3 +71,20 @@ def _stock_monitoring():
     db.session.commit()
 
     return jsonify({"items": return_list})
+
+
+@bp_online_store.route("/StockHistory")
+def _fetch_stock_history():
+    """
+    按商品编号取得商品的历史库存情况
+    """
+    item_code = request.args.get("itemCode")
+    stock_history: list[FavoriteItem] = FavoriteItem.query.filter(
+        FavoriteItem.item_code == item_code
+    ).all()
+    history_data = [
+        {"check_datetime": stock.check_datetime, "stock_quantity": stock.stock_quantity}
+        for stock in stock_history
+    ]
+
+    return jsonify({"item_code": item_code, "stock_history": history_data}), 200

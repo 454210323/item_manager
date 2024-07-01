@@ -79,28 +79,6 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
 
       var cells = filterdData.asMap().entries.map((e) {
         if (e.key == widget.interactiveColumnIndex) {
-          // return DataCell(
-          //   Text(e.value.toString()),
-          //   onTap: () {
-          //     showDialog(
-          //       context: context,
-          //       builder: (BuildContext context) {
-          //         return AlertDialog(
-          //           title: const Text('Detail'),
-          //           content: const Text('For detail'),
-          //           actions: <Widget>[
-          //             TextButton(
-          //               child: const Text('close'),
-          //               onPressed: () {
-          //                 Navigator.of(context).pop();
-          //               },
-          //             ),
-          //           ],
-          //         );
-          //       },
-          //     );
-          //   },
-          // );
           return DataCell(
             Text(e.value.toString()),
             onTap: () {
