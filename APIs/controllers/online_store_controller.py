@@ -1,8 +1,10 @@
 from operator import methodcaller
 from flask import Blueprint, jsonify, request
+from sqlalchemy import case, func, desc, text
 from database import db
 import requests
 from bs4 import BeautifulSoup
+from models.dtos.chiikawa_online_order import ChiikawaOnlineOrder
 from models.dtos.favorite_item import FavoriteItem
 from datetime import datetime
 
@@ -70,6 +72,21 @@ def _stock_monitoring():
 
     db.session.commit()
 
+    # subquery = db.session.query(
+    #     FavoriteItem.item_code,
+    #     FavoriteItem.check_datetime,
+    #     FavoriteItem.stock_quantity,
+    #     func.row_number()
+    #     .over(
+    #         partition_by=FavoriteItem.item_code,
+    #         order_by=desc(FavoriteItem.check_datetime),
+    #     )
+    #     .label("rn"),
+    # ).subquery()
+
+    # # Query the subquery for the latest rows
+    # latest_items = db.session.query(subquery).filter(subquery.c.rn == 1).all()
+
     return jsonify({"items": return_list})
 
 
@@ -88,3 +105,62 @@ def _fetch_stock_history():
     ]
 
     return jsonify({"item_code": item_code, "stock_history": history_data}), 200
+
+
+@bp_online_store.route("/Order")
+def _fetch_online_order():
+
+    print(request.args)
+
+    # item_code = request.args.get("itemCode")
+    item_name = request.args.get("itemName")
+    # item_type = request.args.get("itemType")
+    # series = request.args.get("itemSeries")
+    start_day = request.args.get("startDay")
+    end_day = request.args.get("endDay")
+
+    page = request.args.get("page", 1, type=int)
+    page_size = request.args.get("pageSize", 20, type=int)
+
+    query = (
+        db.session.query(
+            ChiikawaOnlineOrder.item_code,
+            Item.item_name,
+            func.sum(
+                case(
+                    (
+                        ChiikawaOnlineOrder.order_status == "出荷済み",
+                        ChiikawaOnlineOrder.quantity,
+                    ),
+                    else_=0,
+                )
+            ).label("shipped_quantity"),
+            func.coalesce(func.sum(ChiikawaOnlineOrder.quantity), 0).label(
+                "total_quantity"
+            ),
+        )
+        .outerjoin(Item, Item.item_code == ChiikawaOnlineOrder.item_code)
+        .filter(ChiikawaOnlineOrder.order_date >= datetime.fromisoformat(start_day))
+        .filter(ChiikawaOnlineOrder.order_date <= datetime.fromisoformat(end_day))
+        .group_by(ChiikawaOnlineOrder.item_code, Item.item_name)
+        .order_by(desc("total_quantity"))
+    )
+
+    if item_name:
+        query = query.filter(Item.item_name.like(f"%{item_name}%"))
+
+    total_count = query.count()
+
+    pagination = query.paginate(page=page, per_page=page_size, error_out=False)
+    search_results = pagination.items
+    online_orders = [
+        {
+            "item_code": result.item_code,
+            "item_name": result.item_name,
+            "shipped_quantity": result.shipped_quantity,
+            "total_quantity": result.total_quantity,
+        }
+        for result in search_results
+    ]
+
+    return jsonify({"total_count": total_count, "online_orders": online_orders}), 200

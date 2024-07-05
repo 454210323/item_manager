@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Go Rich',
       theme: isDarkMode ? darkTheme : lightTheme,
       home: ResponsiveNavBarPage(toggleTheme: toggleTheme),
+      themeMode: ThemeMode.system,
     );
   }
 }

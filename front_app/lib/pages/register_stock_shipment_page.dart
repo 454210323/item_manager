@@ -131,8 +131,10 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
     try {
       var response = await http.get(Uri.parse(API.Recipients));
       if (response.statusCode == 200) {
-        _recipients =
-            List<String>.from(json.decode(response.body)["recipients"]);
+        setState(() {
+          _recipients =
+              List<String>.from(json.decode(response.body)["recipients"]);
+        });
       }
     } catch (e) {
       showSnackBar(context, 'Error occurred: $e', 'error');

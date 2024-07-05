@@ -6,6 +6,7 @@ import '../constants.dart';
 import '../pages/extra_expense_page.dart';
 import '../pages/home_page.dart';
 import '../pages/item_page.dart';
+import '../pages/online_order_page.dart';
 import '../pages/stock_shipment_page.dart';
 import 'expansion_tile.dart';
 import 'menu_item.dart';
@@ -134,6 +135,8 @@ Widget _currentPageContent(selectedMenuItem) {
     //   return const Text('todo');
     case ScreenConst.EXTRA_EXPENSE:
       return const ExtraExpensePage();
+    case ScreenConst.ONLINE_STORE_ORDER:
+      return const OnlineOrderPage();
     case ScreenConst.STOCK_MONITORING:
       return const StockMonitoringPage();
     default:

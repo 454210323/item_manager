@@ -11,7 +11,10 @@ class AppConst {
       // MenuItem(ScreenConst.REGISTER_SHIPMENT)
     ]),
     MenuItem(ScreenConst.EXTRA_EXPENSE),
-    MenuItem(ScreenConst.STOCK_MONITORING),
+    MenuItem(ScreenConst.ONLINE_STORE, subItems: [
+      MenuItem(ScreenConst.ONLINE_STORE_ORDER),
+      MenuItem(ScreenConst.STOCK_MONITORING),
+    ]),
   ];
 }
 
@@ -23,7 +26,9 @@ class ScreenConst {
   static const REGISTER_STOCK_SHIPMENT = "添加进货出货";
   // static const REGISTER_SHIPMENT = "增加出货";
   static const EXTRA_EXPENSE = "额外消费";
-  static const STOCK_MONITORING = "官网库存监控";
+  static const ONLINE_STORE = "官网相关";
+  static const ONLINE_STORE_ORDER = "官网订单";
+  static const STOCK_MONITORING = "库存监控";
 }
 
 class API {
@@ -89,4 +94,13 @@ class API {
 
   // Stock Monitoring
   static const STOCK_MONITORING = "${ONLINE_STORE_BASE}StockMonitoring";
+
+  // Stock History
+  static const STOCK_HISTORY = "${ONLINE_STORE_BASE}StockHistory";
+
+  // Online Order
+  static const ONLINE_ORDER = "${ONLINE_STORE_BASE}Order";
+
+  // Online Order Count
+  static const ONLINE_ORDER_COUNT = "${ONLINE_STORE_BASE}OrderCount";
 }

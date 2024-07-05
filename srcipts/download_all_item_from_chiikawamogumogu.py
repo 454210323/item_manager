@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 import re
 from base import Session
-from item import Item
+from models.item import Item
 from tqdm import tqdm
 from pathlib import Path
 from urls import chiikawamogumogu_shop
