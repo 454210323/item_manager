@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from config import DevelopmentConfig
 from database import db
 from flask_cors import CORS
@@ -18,6 +19,7 @@ app = Flask(__name__)
 CORS(app)
 app.config.from_object(DevelopmentConfig)
 db.init_app(app)
+jwt = JWTManager(app)
 
 app.register_blueprint(item_controller.bp_item)
 app.register_blueprint(extra_expense_controller.bp_extra_expense)

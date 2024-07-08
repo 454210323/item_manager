@@ -160,7 +160,7 @@ def _get_stock_shipment_infos_v2():
         start_of_day = datetime.fromisoformat(start_day)
         query = query.filter(Shipment.shipment_date >= start_of_day)
     if end_day:
-        end_of_day = datetime.fromisoformat(end_day)
+        end_of_day = datetime.fromisoformat(end_day) + timedelta(days=1)
         query = query.filter(Shipment.shipment_date <= end_of_day)
     results = query.all()
 

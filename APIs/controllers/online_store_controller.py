@@ -6,7 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 from models.dtos.chiikawa_online_order import ChiikawaOnlineOrder
 from models.dtos.favorite_item import FavoriteItem
-from datetime import datetime
+from datetime import datetime, time, timedelta
 
 from models.dtos.item import Item
 
@@ -141,7 +141,10 @@ def _fetch_online_order():
         )
         .outerjoin(Item, Item.item_code == ChiikawaOnlineOrder.item_code)
         .filter(ChiikawaOnlineOrder.order_date >= datetime.fromisoformat(start_day))
-        .filter(ChiikawaOnlineOrder.order_date <= datetime.fromisoformat(end_day))
+        .filter(
+            ChiikawaOnlineOrder.order_date
+            <= (datetime.fromisoformat(end_day) + timedelta(days=1))
+        )
         .group_by(ChiikawaOnlineOrder.item_code, Item.item_name)
         .order_by(desc("total_quantity"))
     )
