@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/pages/register_item_page.dart';
 
 import '../models/table_item.dart';
 import '../pages/update_item_page.dart';
@@ -162,6 +163,14 @@ class _DynamicDataTableState extends State<DynamicDataTable> {
                         },
                       ),
                       Text(itemName),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => RegisterItemPage(
+                                      itemCode: itemCode,
+                                    )));
+                          },
+                          child: const Text('更新'))
                     ],
                   ),
                 );

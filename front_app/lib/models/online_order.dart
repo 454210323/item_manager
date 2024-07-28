@@ -1,4 +1,5 @@
 import 'package:flutter_application_1/models/table_item.dart';
+import 'package:intl/intl.dart';
 
 import '../constants.dart';
 
@@ -8,13 +9,15 @@ class OnlineOrder extends TableItem {
   final int shippedQuantity;
   final int totalQuantity;
   final String image;
+  final DateTime earliestOrderDate;
 
   OnlineOrder(
       {required this.itemCode,
       required this.itemName,
       required this.shippedQuantity,
       required this.totalQuantity,
-      required this.image});
+      required this.image,
+      required this.earliestOrderDate});
 
   factory OnlineOrder.fromJson(Map<String, dynamic> json) {
     return OnlineOrder(
@@ -22,7 +25,8 @@ class OnlineOrder extends TableItem {
         itemName: json['item_name'] ?? '',
         shippedQuantity: json['shipped_quantity'],
         totalQuantity: json['total_quantity'],
-        image: "${API.ITEM_IMAGE}${json['item_code']}.jpg");
+        image: "${API.ITEM_IMAGE}${json['item_code']}.jpg",
+        earliestOrderDate: DateTime.parse(json['earliest_order_date']));
   }
 
   @override
@@ -33,6 +37,7 @@ class OnlineOrder extends TableItem {
       'itemName': itemName,
       'shippedQuantity': shippedQuantity,
       'totalQuantity': totalQuantity,
+      'earliestOrderDate': DateFormat('yyyy-MM-dd').format(earliestOrderDate)
     };
   }
 
@@ -42,6 +47,7 @@ class OnlineOrder extends TableItem {
     'itemName',
     'shippedQuantity',
     'totalQuantity',
+    'earliestOrderDate'
   ];
 
   static const columnsForMediumScreen = [
@@ -49,6 +55,7 @@ class OnlineOrder extends TableItem {
     'itemName',
     'shippedQuantity',
     'totalQuantity',
+    'earliestOrderDate'
   ];
 
   static const columnsForSmallScreen = [

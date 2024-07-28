@@ -60,22 +60,24 @@ class _ExtraExpensePageState extends State<ExtraExpensePage> {
                 child: const Text('Register New ExtraExpense'),
               ),
             ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: _extraExpenses.isEmpty
-                  ? const CircularProgressIndicator()
-                  : SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: DynamicDataTable(
-                        data: _extraExpenses,
-                        visibleColumns: const [
-                          'type',
-                          'expense',
-                          'content',
-                          'date'
-                        ],
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: _extraExpenses.isEmpty
+                    ? const CircularProgressIndicator()
+                    : SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: DynamicDataTable(
+                          data: _extraExpenses,
+                          visibleColumns: const [
+                            'type',
+                            'expense',
+                            'content',
+                            'date'
+                          ],
+                        ),
                       ),
-                    ),
+              ),
             ),
           ],
         ),

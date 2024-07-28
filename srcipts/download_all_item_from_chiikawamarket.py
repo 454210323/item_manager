@@ -4,6 +4,7 @@ from Utils import (
     find_content_between_spaces_regex,
     find_price,
     find_image_src,
+    upload_image_to_server,
 )
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -16,10 +17,17 @@ from urls import (
     chiikawamarket_all_items_url,
     naganomarket_all_items_url,
     chiikawamarket_new_items_url,
+    naganomarket_new_items_url,
 )
+import requests
 
 base_url = chiikawamarket_new_items_url
-save_path = "../APIs/static/images"
+resource_url = "http://192.168.0.126:5001/static/images/"
+
+upload_image_endpoint = "http://192.168.0.126:5001/fetch_chikawa_online_store_image"
+save_path = (
+    r"C:\Users\wuqipeng\Desktop\work\flutter_application\static_resource\static\images"
+)
 
 
 def find_all_items():
@@ -41,7 +49,8 @@ def find_all_items():
                 item_code = link.split("/")[-1]
                 item = session.query(Item).get(item_code)
                 image_name = f"{item_code}.jpg"
-                if item and Path(f"{save_path}/{image_name}").exists():
+                response = requests.get(f"{resource_url+image_name}")
+                if item and response.status_code == 200:
                     continue
 
                 item_name = item_element.find_element(
@@ -51,9 +60,9 @@ def find_all_items():
                 price = find_price(
                     item_element.find_element(By.CLASS_NAME, "product_price").text
                 )
-                if item_code == "4582662954519":
+                if item_code == "4582662953581":
                     pass
-                if not Path(f"{save_path}/{image_name}").exists():
+                if not response.status_code == 200:
                     img_elements = item_element.find_elements(
                         By.CSS_SELECTOR, ".product--image img"
                     )
@@ -71,6 +80,8 @@ def find_all_items():
                         break
 
                     download_image(img_src, f"{save_path}/{image_name}")
+                    # upload_image_to_server(img_src, upload_image_endpoint, item_code)
+                    # requests.get(upload_image_endpoint, params={"item_code": item_code})
                 if not item:
                     item = Item(
                         item_code=item_code,

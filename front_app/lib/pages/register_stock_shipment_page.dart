@@ -13,6 +13,7 @@ import '../widgets/barcode_scanner.dart';
 import '../widgets/drop_down.dart';
 import '../widgets/dynamic_segment.dart';
 import '../widgets/no_item_waring.dart';
+import '../widgets/responsive_sized_box.dart';
 import '../widgets/stock_data_table.dart';
 
 class RegisterStockShipmentPage extends StatefulWidget {
@@ -149,7 +150,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
     });
   }
 
-  Widget _RecipientSelector() {
+  Widget _recipientSelector() {
     return CustomDropdownButton(
       hint: "选择客户",
       options: _recipients,
@@ -178,8 +179,9 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                 onValueChanged: _setSelectedMode,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
+                  ResponsiveSizedBox(
                     child: TextField(
                       controller: _itemCodeController,
                       decoration: const InputDecoration(labelText: "商品编码"),
@@ -202,18 +204,26 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                       _fetchItem();
                     },
                     child: const Text('扫描'),
-                  )
+                  ),
                 ],
               ),
-              const SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _selectedMode == "出货" ? _RecipientSelector() : Container(),
+                  _selectedMode == "出货"
+                      ? Row(
+                          children: [
+                            _recipientSelector(),
+                            const SizedBox(width: 10),
+                          ],
+                        )
+                      : Container(),
                   Text(
-                    '$_selectedMode日: ${DateFormat('yyyy-MM-dd').format(_selectedDate)}',
+                    '$_selectedMode日:',
                   ),
+                  const SizedBox(width: 10),
                   ElevatedButton(
-                    child: const Text('选择日期'),
+                    child: Text(DateFormat('yyyy-MM-dd').format(_selectedDate)),
                     onPressed: () async {
                       final DateTime? picked = await showDatePicker(
                         context: context,
@@ -230,8 +240,8 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                   ),
                 ],
               ),
-              const SizedBox(width: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
                     onPressed: _submitData,
@@ -244,6 +254,7 @@ class _RegisterStockShipmentPageState extends State<RegisterStockShipmentPage> {
                 ],
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text("商品种类"),
                   const SizedBox(

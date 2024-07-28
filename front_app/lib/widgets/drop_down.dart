@@ -29,23 +29,40 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      hint: Text(widget.hint),
-      value: _selectedValue,
-      onChanged: (String? newValue) {
-        if (newValue != null) {
-          setState(() {
-            _selectedValue = newValue;
-          });
-          widget.onSelected(newValue);
-        }
-      },
-      items: widget.options.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    double boxWidth = 100;
+    if (screenWidth < 800) {
+      boxWidth = 50;
+    } else if (screenWidth < 1600) {
+      boxWidth = 100;
+    } else {
+      boxWidth = 200;
+    }
+
+    return SizedBox(
+      width: boxWidth,
+      child: DropdownButton<String>(
+        isExpanded: true,
+        hint: Text(widget.hint),
+        value: _selectedValue,
+        onChanged: (String? newValue) {
+          if (newValue != null) {
+            setState(() {
+              _selectedValue = newValue;
+            });
+            widget.onSelected(newValue);
+          }
+        },
+        items: widget.options.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+            ),
+          );
+        }).toList(),
+      ),
     );
   }
 }

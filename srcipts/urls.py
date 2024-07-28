@@ -17,3 +17,6 @@ chiikawamogumogu_shop = (
 chiikawamarket_new_items_url = (
     "https://chiikawamarket.jp/collections/newitems?page={page_num}"
 )
+naganomarket_new_items_url = (
+    "https://nagano-market.jp/collections/newitems?page={page_num}"
+)

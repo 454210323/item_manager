@@ -32,9 +32,9 @@ class ScreenConst {
 }
 
 class API {
-  static const STATIC_RESOURCE_URL = "https://static-resource.fly.dev/";
+  static const STATIC_RESOURCE_URL = "https://www233.blob.core.windows.net/";
 
-  static const BASE_URL = "http://192.168.0.126:5000/";
+  static const BASE_URL = "https://www233-item-manager.fly.dev/";
 
   // Item Base Url
   static const ITEM_BASE = "${BASE_URL}Item/";
@@ -54,7 +54,8 @@ class API {
   static const ITEM_CONDITIONS = "${ITEM_BASE}Conditions";
 
   // Item image
-  static const ITEM_IMAGE = "${STATIC_RESOURCE_URL}static/images/";
+  static const ITEM_IMAGE =
+      "${STATIC_RESOURCE_URL}chiikawa-item-images/chiikawa-item-images/";
 
   // Extra Expense Base Url
   static const EXTRA_EXPENSE_BASE = "${BASE_URL}ExtraExpense/";
@@ -103,4 +104,8 @@ class API {
 
   // Online Order Count
   static const ONLINE_ORDER_COUNT = "${ONLINE_STORE_BASE}OrderCount";
+
+  // Earliest Unshipped Order Date
+  static const EARLIEST_UNSHIPPED_ORDER_DATE =
+      "${ONLINE_STORE_BASE}EarliestUnshippedOrderDate";
 }

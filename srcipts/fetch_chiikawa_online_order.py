@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from base import Session
+from models.chiikawa_online_order_detail import ChiikawaOnlineOrderDetail
 from models.chiikawa_online_order import ChiikawaOnlineOrder
 from datetime import datetime
 from tqdm import tqdm
@@ -21,28 +22,28 @@ cookies_wu = {
     "_ga_PN5MPJPH85": "deleted",
     "shop_pay_accelerated": "%7B%22disable_auto_redirect%22%3A%22%22%2C%22session_detected_at%22%3A1718273140%7D",
     "shopify_pay_redirect": "true",
-    "_orig_referrer": "",
-    "_landing_page": "%2Fcollections%2Fnewitems",
     "_tracking_consent": "%7B%22con%22%3A%7B%22CMP%22%3A%7B%22a%22%3A%22%22%2C%22m%22%3A%22%22%2C%22p%22%3A%22%22%2C%22s%22%3A%22%22%7D%7D%2C%22v%22%3A%222.1%22%2C%22region%22%3A%22JP13%22%2C%22reg%22%3A%22%22%7D",
-    "_clck": "1kcw06y%7C2%7Cfn1%7C0%7C1641",
-    "_ga_7WX3W15SYL": "GS1.1.1719679272.2.0.1719679272.60.0.0",
+    "_clck": "1kcw06y%7C2%7Cfn7%7C0%7C1641",
+    "_ga_7WX3W15SYL": "GS1.1.1720401775.4.0.1720401775.60.0.0",
+    "cart": "Z2NwLXVzLWNlbnRyYWwxOjAxSjM3TjU0MDIwNDJRS0JOOTgzR1kwSzNG%3Fkey%3Db75de31b6be5d4daae4d4ef760bff7eb",
+    "cart_sig": "3926e1b732064a14b23b5750f08a0629",
     "_cmp_a": "%7B%22purposes%22%3A%7B%22a%22%3Atrue%2C%22p%22%3Atrue%2C%22m%22%3Atrue%2C%22t%22%3Atrue%7D%2C%22display_banner%22%3Afalse%2C%22sale_of_data_region%22%3Afalse%7D",
-    "_gid": "GA1.2.1222447335.1719995837",
-    "cart": "Z2NwLWFzaWEtc291dGhlYXN0MTowMUoxVlZWSzBRNFFBSjFCQ0ZUWFBLVDJIVg%3Fkey%3D3d22a09e0fa3ff1367b6787b9b523686",
-    "cart_sig": "832e4e4d95bcc2c215f18617e226da47",
+    "_gid": "GA1.2.1307836889.1721985702",
     "receive-cookie-deprecation": "1",
+    "_orig_referrer": "https%3A%2F%2Fchiikawamarket.jp%2Fcollections%2Fnewitems%2Fproducts%2F4582662958524",
+    "_landing_page": "%2Faccount%2F",
     "_shopify_sa_p": "",
-    "__lt__sid": "1a23882c-5a941c13",
-    "shopify_pay": "L1hRNjJnWVRVNTVxbFlaTWV6OHBFNGltclhUTXpsQ1RHMXRleWliR3hkc0hwWjA5N0xTc29tN0g5TDVrV1ZHK3lCR1ZoY0NwZmF0QThNQnBKQTRXYmF4dHpiTWZTSy80M09vS0xrWW1MSzg4dFpmaUdGSGxBbmE2SjNzTUhhOHgzbCtZbWM5MDMvWWI5VzJ6d1R4dUNlUzNYS0NJdmw1Q2ZWZmZOb0VaWXMwTlgxa2F3d0lrTFplRXRaSFV2NEhTOWVsY1p3TmlsZUVzU3g0SlpXN3lYM2FrTEQzS0ptSDBvSU0vMW45dGcwZGZKQytZcndESmovRTVFOU13RjBmaXpBc3lvTEdBYTVoTjhGcnVCL1p3VjlRdGRhQ2NwUlFRbk9vUlRFL1M5QzRiMHhnb05vZmR1cTUwd0U1d1VqN1pEMHFYZmtITDdsMUVQeEhlczI2VGpvQ1RtaThNUlpLalFkT1J6NFlhREhFanlaZlhzSmpaSGtjTHZVcnRuTGdHMEEvNVFGQ09QTW1sd3hWY3gwTXV3UT09LS1XckYwT3l3cVViRGJjenFrMmJtRTNnPT0%3D--c2c9b5b229aaebe26d2c3138f11b58f6a3a7bf84",
-    "_shopify_essential": ":AZB3veADAAH_Kz423ObeIMoy_m250UQ76Vj2X7EHRqOPKLIxMqOPikrwPYV4N6BoNMuKfvfiI-LI91gGydDwma-o_DeJNU3ITA3q0g:",
-    "cart_ts": "1720150261",
-    "secure_customer_sig": "40c76f83cc6ce34eb7dd0ba977540228",
-    "keep_alive": "827e67be-eb8b-48f0-b421-8e979fd25dc5",
-    "_shopify_s": "6a552363-4717-41e6-9811-b5e4797479f8",
-    "_ga": "GA1.1.1347574435.1715851172",
     "_gat": "1",
-    "_shopify_sa_t": "2024-07-05T03%3A31%3A55.885Z",
-    "_ga_PN5MPJPH85": "GS1.1.1720150238.26.1.1720150317.58.0.0",
+    "__lt__sid": "1a23882c-cae45b96",
+    "shopify_pay": "KzlxYVJiZkRmSFl2STZZWTRCOFpYWGt1SjVXbVlUNzJUNDlBYklQekdnTXVXMUpqWGZ6SG9JMjY2cTF4cloxd3V5ZFlFQ3ova0tIZzZmMkhpaVN1SFdrZ1ppQzlWekJIREwrcXZsVDF0WXAwVEk3bG45emNPRi9iK2UrMkhMQXl0dG04ODViMVkvYUhEcWUrbmd4MTBxYURGRXlrWVpOVmk3WkhwbWtQdUk5eWJaell5RUVJQjlZS0xZdjBOTVJSRldWQ2lUS01XTndoL05FWERDQk9INllCd0cxejdKbUlFTU8vYjlHb2VUY3MxZWZJWGlJNWNWT3luUEkyaHE3TzhjcDRtTkRnRmg1MTZQalptMU9lRjU1LzE3YUJ4c2gzVEJnMmljZmxzVnBrR1BoWVB6V3dCNUJGVmxlVW5JaUlGWkZCUGFyVS9HYWFuRm10NnNyM1ZjQjZ4aVZpNlM0cDR0VUhnTkIxZUhxNXNkb2xlZUtoUTIzT2MySFBFTGZKQ1ozUUhSRWJMb3hEQ2NQSW9TUUgyZz09LS1HcFRKU09SY2R2Nmp0TFA4aHJjTVlRPT0%3D--251531f7b4e0c15c17e1de3100a3af69196632b6",
+    "_shopify_essential": ":AZB3veADAAH_HHBHRFlstoqGfRk7tO_tAe6TncAO8zmNAo-4lWWgofNhbVMj8CEni0lqrZGSzu0uEJVeYnVoZgFEnu0_9C4rxbAUKSEk4daVk1oUFNzTFrBP0CCt:",
+    "cart_ts": "1721991079",
+    "secure_customer_sig": "40c76f83cc6ce34eb7dd0ba977540228",
+    "keep_alive": "4f188fa1-b7b2-4356-883d-289166b7e2fa",
+    "_shopify_s": "51cbe1ce-3ddc-42fd-8eba-45bf03ba7ea7",
+    "_ga": "GA1.2.1347574435.1715851172",
+    "_shopify_sa_t": "2024-07-26T10%3A51%3A20.612Z",
+    "_ga_PN5MPJPH85": "GS1.1.1721991068.44.1.1721991082.46.0.0",
 }
 
 
@@ -61,28 +62,28 @@ cookies_you = {
     "_ga_PN5MPJPH85": "deleted",
     "shop_pay_accelerated": "%7B%22disable_auto_redirect%22%3A%22%22%2C%22session_detected_at%22%3A1718273140%7D",
     "shopify_pay_redirect": "true",
-    "_orig_referrer": "",
-    "_landing_page": "%2Fcollections%2Fnewitems",
     "_tracking_consent": "%7B%22con%22%3A%7B%22CMP%22%3A%7B%22a%22%3A%22%22%2C%22m%22%3A%22%22%2C%22p%22%3A%22%22%2C%22s%22%3A%22%22%7D%7D%2C%22v%22%3A%222.1%22%2C%22region%22%3A%22JP13%22%2C%22reg%22%3A%22%22%7D",
-    "_clck": "1kcw06y%7C2%7Cfn1%7C0%7C1641",
-    "_ga_7WX3W15SYL": "GS1.1.1719679272.2.0.1719679272.60.0.0",
+    "_clck": "1kcw06y%7C2%7Cfn7%7C0%7C1641",
+    "_ga_7WX3W15SYL": "GS1.1.1720401775.4.0.1720401775.60.0.0",
+    "cart": "Z2NwLXVzLWNlbnRyYWwxOjAxSjM3TjU0MDIwNDJRS0JOOTgzR1kwSzNG%3Fkey%3Db75de31b6be5d4daae4d4ef760bff7eb",
+    "cart_sig": "3926e1b732064a14b23b5750f08a0629",
+    "_orig_referrer": "https%3A%2F%2Fchiikawamarket.jp%2Fcollections%2Fnewitems%2Fproducts%2F4582662958524",
+    "_landing_page": "%2Faccount%2F",
     "_cmp_a": "%7B%22purposes%22%3A%7B%22a%22%3Atrue%2C%22p%22%3Atrue%2C%22m%22%3Atrue%2C%22t%22%3Atrue%7D%2C%22display_banner%22%3Afalse%2C%22sale_of_data_region%22%3Afalse%7D",
-    "_gid": "GA1.2.1222447335.1719995837",
-    "cart": "Z2NwLWFzaWEtc291dGhlYXN0MTowMUoxVlZWSzBRNFFBSjFCQ0ZUWFBLVDJIVg%3Fkey%3D3d22a09e0fa3ff1367b6787b9b523686",
-    "cart_sig": "832e4e4d95bcc2c215f18617e226da47",
     "receive-cookie-deprecation": "1",
     "_shopify_sa_p": "",
-    "__lt__sid": "1a23882c-5a941c13",
-    "shopify_pay": "bWFFa0l4c05pU05RTTAwVUd3aFRUVmxyM1Y0L0dwV1BCTm1qdXZpeVVSL0s4alRXeEoxeEdnRHlOM2ZHa1EzS1dhTm5Cb2djZDlwejNNU25GUUJlWnZXa1JwZCtWWXZ2Ykk2ZTA0aHBZc3dUOXl6RXpNRldqMVZsdHQydDZPaElHM2dOR2tGK2lVVUFQTDd4bUhqaGM2R2E3TWxUYy9DT204c3ZmOTNiWndNaTNYZnc0RUg2SDE1cjYyejk3QnlqT1hka2t2WjIyU1NzWm5pQ01iNWUyR2RRclJmVzNJWTlLWnNsaUFsUk9zOTg0bGFqaW4xcmlNb0dBZ1ZvNjgybGpWLzExMGVpRkFvUEdsM2s3cFNJdGhSMHZPbUg5dnh5YjVyaVpJanBlUEFkM0YzQmtub0hRTzU0cUNoSnc2KzE5V2xDeFRPNUxTdkl3TWxmSmVSK2hxVC9oWVEvZXQ4UW5iM204L2UvOUltSFZqS24wRmxtOEdYRWQ1eTF4UHlhbEtuVzJwNDZCYkxBYUdSamdZdTViUT09LS12N1Fwa2dIRVI0NjRNT0J3WVFiazVnPT0%3D--5c90d9bcd7d76624ef82dd8bb8628aaaa0c6f098",
+    "_gid": "GA1.2.144811571.1722090849",
     "_gat": "1",
-    "_shopify_essential": ":AZB3veADAAH_b71uecEqoK_rQQp6yEKxdwwFfKMKDVOvoMn64L4gFGmkUrgLwDkoRaagNXcbd58SAoTflkRTf_4xzfMNcheuMsy7jA:",
-    "cart_ts": "1720150706",
-    "secure_customer_sig": "a1dd051f6d519df6338bfefdba7ef3c4",
-    "keep_alive": "718c8ef6-99ae-49a2-9caf-4d8c0e708eae",
-    "_ga_PN5MPJPH85": "GS1.1.1720150238.26.1.1720150707.44.0.0",
-    "_shopify_s": "6a552363-4717-41e6-9811-b5e4797479f8",
+    "__lt__sid": "1a23882c-3b43908c",
+    "shopify_pay": "N0RnY0xndWZDS2U4UkhOU3ozdmZZZjd1Y3daaTlpSUd4QS9kM0V0dlJtb25zbm1VTWxrYkdDWk1LZ3Q0bzJCWDlQcTM1NHRJYVhEbUN4dTZodXZuaFRkYUY2c043RkFxa2FDZEJ3Z1dMYkhzMlE0UzZIdG5aRFBrYTFUUFlZQzZ2aUhseXFQS00zOWdHdGVhYWFJaFVjalhkZzI5cmtDTkgwM3N4aWs4RUxwZjZZMkFsaTgrTndBbjZ2NDJxRGxNdjluNjE4Q3o2NFJVV1ozVlF4cjNkRkVSa2NNUkZWRG1WYytJY014bW9wTm1ENXozWUR5UGg1VUxYbmtzVUxZQ1RXRmk3eVhydzA1VWIvbUNCNW9tZDU2S05XZzFZcmh3eEpKYjhMaDJIMHp0M0I3a0NyQW80YXVIa3QxWUVrcExmRHFTUkpFWjV2NUt1c2MrREpoaWxMRDRoTlVZdy9kMk5idVh2WDl0Y0pKbWV5cmRvRE1lMEM4Z3RtYmxoUTNoRUw3UWFUTUVNRjdNeWpuenZ5RVVuQT09LS01dk02WkxmcTdEQjBWYndPai90Z09RPT0%3D--3efd16f0676d251dcc0d9e6599ab132c14293174",
+    "_shopify_essential": ":AZB3veADAAH_a4VH8HvAxzue6TWni7stSRXOS-dUtH9WCHGZVp7GzJYg8TrJidiMDiRVW2ggKun6BxR7TZnWN2JE7BG6XHxag41pz4JedeeJTuYm5MJqliW8Oymh:",
+    "cart_ts": "1722090865",
+    "secure_customer_sig": "9c052d1d6646335357525193e8d9a3e9",
+    "keep_alive": "5ea0e8df-0d75-4538-b945-f26171d17882",
+    "_ga_PN5MPJPH85": "GS1.1.1722090849.45.1.1722090865.44.0.0",
+    "_shopify_s": "d245c242-b7eb-4012-bfe8-797ff2deaa6a",
     "_ga": "GA1.2.1347574435.1715851172",
-    "_shopify_sa_t": "2024-07-05T03%3A38%3A27.606Z",
+    "_shopify_sa_t": "2024-07-27T14%3A34%3A25.538Z",
 }
 
 orderer = "you"
@@ -123,7 +124,7 @@ def fetch_all_order_url():
 
 
 def fetch_order_item_info(soup: BeautifulSoup):
-    items: list[ChiikawaOnlineOrder] = []
+    items: list[ChiikawaOnlineOrderDetail] = []
 
     item_codes = soup.find_all("li", {"data-label": "商品コード"})
     quantities = soup.find_all("li", {"data-label": "数量"})
@@ -131,7 +132,7 @@ def fetch_order_item_info(soup: BeautifulSoup):
     for code, quantity in zip(item_codes, quantities):
         item_code = code.get_text(strip=True).replace("商品コード：", "")
         quantity = quantity.get_text(strip=True).replace("数量：", "")
-        items.append(ChiikawaOnlineOrder(item_code=item_code, quantity=quantity))
+        items.append(ChiikawaOnlineOrderDetail(item_code=item_code, quantity=quantity))
     return items
 
 
@@ -156,13 +157,17 @@ def fetch_order_detail_and_insert(order_url):
     items = fetch_order_item_info(item_info_table)
     for item in items:
         item.order_no = order_no
-        item.order_url = order_url
-        item.order_status = order_status
-        item.order_date = order_date
-        item.orderer = orderer
+    order: ChiikawaOnlineOrder = ChiikawaOnlineOrder(
+        order_no=order_no,
+        order_url=order_url,
+        order_date=order_date,
+        order_status=order_status,
+        orderer=orderer,
+    )
 
     session = Session()
     try:
+        session.add(order)
         session.add_all(items)
         session.commit()
     except Exception as e:

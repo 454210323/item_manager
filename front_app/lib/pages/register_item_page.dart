@@ -1,14 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:decimal/decimal.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker_web/image_picker_web.dart';
+
 import 'package:mime/mime.dart';
 
 import '../constants.dart';
+import '../models/item.dart';
 import '../widgets/barcode_scanner.dart';
 import '../widgets/show_snack_bar.dart';
 
@@ -29,49 +34,92 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
   final TextEditingController _priceController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   File? _imageFile;
+  Uint8List? _imageBytes;
+  bool _isUpdate = false;
 
   bool _isLoading = false;
-
+  Item? _item;
   @override
   void initState() {
     super.initState();
     _itemCodeController.text = widget.itemCode;
+    setState(() {
+      _isUpdate = widget.itemCode.isNotEmpty;
+    });
+    _fetchItem();
+  }
+
+  Future<void> _fetchItem() async {
+    var url = Uri.parse(API.ITEM).replace(queryParameters: {
+      'itemCode': _itemCodeController.text,
+    });
+    try {
+      var response = await http.get(url);
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        if (jsonData['status']) {
+          setState(() {
+            _item = Item.fromJson(jsonData['item']);
+          });
+          _itemNameController.text = _item!.itemName;
+          _itemTypeController.text = _item!.type;
+          _seriesController.text = _item!.series;
+          _priceController.text = _item!.price.toString();
+        }
+      }
+    } catch (e) {
+      showSnackBar(context, 'Error occurred: $e', 'error');
+    }
   }
 
   Future<void> _pickImage() async {
-    final ImageSource? source = await showDialog<ImageSource>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select the image source'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Camera'),
-              onPressed: () {
-                Navigator.pop(context, ImageSource.camera);
-              },
-            ),
-            TextButton(
-              child: Text('Gallery'),
-              onPressed: () {
-                Navigator.pop(context, ImageSource.gallery);
-              },
-            ),
-          ],
-        );
-      },
-    );
+    if (kIsWeb) {
+      // Web平台选择图片
+      // final Uint8List? bytes = await ImagePickerWeb.getImageAsBytes();
+      // if (!mounted) return; // 检查是否挂载
+      // if (bytes != null) {
+      //   setState(() {
+      //     _imageBytes = bytes;
+      //   });
+      // } else {
+      //   showSnackBar(context, 'No image selected', 'error');
+      // }
+    } else {
+      // 移动平台选择图片
+      final ImageSource? source = await showDialog<ImageSource>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Select the image source'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Camera'),
+                onPressed: () {
+                  Navigator.pop(context, ImageSource.camera);
+                },
+              ),
+              TextButton(
+                child: Text('Gallery'),
+                onPressed: () {
+                  Navigator.pop(context, ImageSource.gallery);
+                },
+              ),
+            ],
+          );
+        },
+      );
 
-    if (source != null) {
-      final pickedFile = await _picker.pickImage(source: source);
-      if (!mounted) return; // 检查是否挂载
-      setState(() {
-        if (pickedFile != null) {
-          _imageFile = File(pickedFile.path);
-        } else {
-          showSnackBar(context, 'No image selected', 'error');
-        }
-      });
+      if (source != null) {
+        final pickedFile = await _picker.pickImage(source: source);
+        if (!mounted) return; // 检查是否挂载
+        setState(() {
+          if (pickedFile != null) {
+            _imageFile = File(pickedFile.path);
+          } else {
+            showSnackBar(context, 'No image selected', 'error');
+          }
+        });
+      }
     }
   }
 
@@ -88,7 +136,9 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
       _isLoading = true;
     });
     try {
-      final request = http.MultipartRequest('POST', Uri.parse(API.ITEM));
+      var requestMethod = _isUpdate ? 'PUT' : 'POST';
+
+      final request = http.MultipartRequest(requestMethod, Uri.parse(API.ITEM));
       request.fields['itemCode'] = _itemCodeController.text;
       request.fields['itemName'] = _itemNameController.text;
       request.fields['itemType'] = _itemTypeController.text;
@@ -140,13 +190,15 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () async {
-                      String result = await BarcodeScanner.scanBarcode();
-                      if (!mounted) return;
-                      setState(() {
-                        _itemCodeController.text = result;
-                      });
-                    },
+                    onPressed: _isUpdate
+                        ? () async {
+                            String result = await BarcodeScanner.scanBarcode();
+                            if (!mounted) return;
+                            setState(() {
+                              _itemCodeController.text = result;
+                            });
+                          }
+                        : null,
                     child: const Text('Scan'),
                   )
                 ],
@@ -183,13 +235,20 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
                     // onPressed: () {},
                     child: const Text('添加图片'),
                   ),
-                  _imageFile == null
-                      ? Container()
-                      : Image.file(
-                          _imageFile!,
-                          width: 100,
-                          height: 100,
-                        ),
+                  if (_imageBytes != null)
+                    Image.memory(
+                      _imageBytes!,
+                      width: 100,
+                      height: 100,
+                    )
+                  else if (_imageFile != null)
+                    Image.file(
+                      _imageFile!,
+                      width: 100,
+                      height: 100,
+                    )
+                  else
+                    Container(),
                 ],
               ),
               Padding(

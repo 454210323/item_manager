@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/widgets/drop_down.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -9,6 +10,7 @@ import '../constants.dart';
 import '../models/online_order.dart';
 import '../widgets/dynamic_data_table.dart';
 import '../widgets/page_button.dart';
+import '../widgets/responsive_sized_box.dart';
 import '../widgets/show_snack_bar.dart';
 
 class OnlineOrderPage extends StatefulWidget {
@@ -20,6 +22,7 @@ class OnlineOrderPage extends StatefulWidget {
 
 class _OnlineOrderPageState extends State<OnlineOrderPage> {
   final TextEditingController _itemNameController = TextEditingController();
+  String _selectedOrderStatus = "";
 
   List<OnlineOrder> _orders = [];
   bool _isLoading = false;
@@ -30,6 +33,42 @@ class _OnlineOrderPageState extends State<OnlineOrderPage> {
   DateTime _startDay = DateTime(2023);
   DateTime _endDay = DateTime.now();
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchEarliestUnshippedOrderDate();
+  }
+
+  void _setSelectedOrderStatus(String value) {
+    setState(() {
+      _selectedOrderStatus = value;
+    });
+  }
+
+  Future<void> _fetchEarliestUnshippedOrderDate() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      var url = Uri.parse(API.EARLIEST_UNSHIPPED_ORDER_DATE);
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        String earliestDate = jsonData['earliest_date'];
+        if (earliestDate.isNotEmpty) {
+          setState(() {
+            _startDay = DateTime.parse(earliestDate);
+          });
+        }
+      }
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   Future<void> _fetchData() async {
     setState(() {
       _isLoading = true;
@@ -37,6 +76,7 @@ class _OnlineOrderPageState extends State<OnlineOrderPage> {
     try {
       var url = Uri.parse(API.ONLINE_ORDER).replace(queryParameters: {
         'itemName': _itemNameController.text,
+        'orderStatus': _selectedOrderStatus,
         'startDay': _startDay.toIso8601String(),
         'endDay': _endDay.toIso8601String(),
         'page': _currentPage.toString(),
@@ -105,8 +145,7 @@ class _OnlineOrderPageState extends State<OnlineOrderPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 300,
+                ResponsiveSizedBox(
                   child: TextField(
                     decoration: const InputDecoration(labelText: 'Item Name'),
                     controller: _itemNameController,
@@ -146,6 +185,15 @@ class _OnlineOrderPageState extends State<OnlineOrderPage> {
                     }
                   },
                 ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomDropdownButton(
+                    hint: "订单状态",
+                    options: const ["全部", "未発送", "出荷済み"],
+                    onSelected: _setSelectedOrderStatus),
                 const SizedBox(
                   width: 10,
                 ),

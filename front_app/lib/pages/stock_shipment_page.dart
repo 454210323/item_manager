@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/models/search_condition.dart';
 import 'package:flutter_application_1/widgets/search_form.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -8,6 +9,8 @@ import 'package:intl/intl.dart';
 import '../constants.dart';
 import '../models/stock_shipment.dart';
 import '../widgets/dynamic_data_table.dart';
+import '../widgets/page_button.dart';
+import '../widgets/show_snack_bar.dart';
 
 class StockShipmentPage extends StatefulWidget {
   const StockShipmentPage({super.key});
@@ -17,35 +20,56 @@ class StockShipmentPage extends StatefulWidget {
 }
 
 class _StockShipmentPageState extends State<StockShipmentPage> {
-  List<StockShipment> _StockShipments = [];
+  List<StockShipment> _stockShipments = [];
   DateTime _startDay = DateTime(2023);
   DateTime _endDay = DateTime.now();
+  SearchCondition _searchCondition =
+      SearchCondition(itemCode: '', itemName: '', type: '', series: '');
 
-  Future<void> _onSearch(String itemCode, String itemName, String itemType,
-      String itemSerise) async {
+  bool _isLoading = false;
+  int _currentPage = 1;
+  int _pageSize = 20;
+  int _totalPage = 10;
+
+  Future<void> _onSearch() async {
+    setState(() {
+      _isLoading = true;
+    });
     var url = Uri.parse(API.STOCK_SHIPMENT_INFOS_V2).replace(queryParameters: {
-      'itemCode': itemCode,
-      'itemName': itemName,
-      'itemType': itemType,
-      'itemSeries': itemSerise,
+      'itemCode': _searchCondition.itemCode,
+      'itemName': _searchCondition.itemName,
+      'itemType': _searchCondition.type,
+      'itemSeries': _searchCondition.series,
       'startDay': _startDay.toIso8601String(),
-      'endDay': _endDay.toIso8601String()
+      'endDay': _endDay.toIso8601String(),
+      'page': _currentPage.toString(),
+      'pageSize': _pageSize.toString()
     });
 
     try {
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body)['stock_shipment_infos'];
+        var jsonData = json.decode(response.body);
+        var data = jsonData['stock_shipment_infos'];
+        var totalCount = jsonData['total_count'];
 
         setState(() {
-          _StockShipments = data
+          _stockShipments = data
               .map<StockShipment>((json) => StockShipment.fromJson(json))
               .toList();
+          _totalPage = (totalCount / _pageSize).ceil();
         });
+        showSnackBar(context, '取得成功', 'success');
+      } else {
+        showSnackBar(context, '取得失败', 'error');
       }
     } catch (e) {
-      print(e.toString());
+      showSnackBar(context, 'An error occurred: $e', 'error');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -57,6 +81,26 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
     } else {
       return StockShipment.columnsForLargeScreen;
     }
+  }
+
+  void _onCurrentPageChange(int currentPage) {
+    setState(() {
+      _currentPage = currentPage;
+    });
+    _onSearch();
+  }
+
+  void _onPageSizeChange(int pageSize) {
+    setState(() {
+      _pageSize = pageSize;
+    });
+    _onSearch();
+  }
+
+  void _onSearchConditionChange(SearchCondition searchCondition) {
+    setState(() {
+      _searchCondition = searchCondition;
+    });
   }
 
   @override
@@ -105,16 +149,33 @@ class _StockShipmentPageState extends State<StockShipmentPage> {
               ],
             ),
             SearchForm(
-              onSearch: _onSearch,
+              onSearchConditionChange: _onSearchConditionChange,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(onPressed: _onSearch, child: const Text("Search")),
+            const SizedBox(
+              height: 10,
+            ),
+            _stockShipments.isNotEmpty
+                ? PageButton(
+                    totalPages: _totalPage,
+                    onCurrentPageChange: _onCurrentPageChange,
+                    onPageSizeChange: _onPageSizeChange,
+                  )
+                : Container(),
+            const SizedBox(
+              height: 10,
             ),
             Expanded(
               child: SingleChildScrollView(
-                child: _StockShipments.isEmpty
-                    ? const Text("no data")
+                child: _isLoading
+                    ? const CircularProgressIndicator()
                     : SizedBox(
                         width: MediaQuery.of(context).size.width,
                         child: DynamicDataTable(
-                          data: _StockShipments,
+                          data: _stockShipments,
                           visibleColumns: getVisiableColumns(
                               MediaQuery.of(context).size.width),
                           imageColumnIndex: 0,

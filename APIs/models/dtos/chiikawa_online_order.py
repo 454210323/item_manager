@@ -7,21 +7,17 @@ class ChiikawaOnlineOrder(db.Model):
     __tablename__ = "chiikawa_online_order"
     order_no = Column(String, primary_key=True)
     order_url = Column(String)
-    item_code = Column(String, primary_key=True)
-    quantity = Column(Integer)
     order_date = Column(Date)
     order_status = Column(String)
     orderer = Column(String)
     __table_args__ = (
-        PrimaryKeyConstraint("order_no", "item_code", name="chiikawa_online_order_pk"),
+        PrimaryKeyConstraint("order_no", name="chiikawa_online_order_pk"),
     )
 
     def to_dict(self):
         return {
             "order_no": self.order_no,
             "order_url": self.order_url,
-            "item_code": self.item_code,
-            "quantity": self.quantity,
             "order_date": self.order_date.isoformat(),
             "order_status": self.order_status,
             "orderer": self.orderer,

@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 
 import '../widgets/dynamic_data_table.dart';
 import '../widgets/custom_line_chart.dart';
+import '../widgets/responsive_sized_box.dart';
 import '../widgets/show_snack_bar.dart';
 
 class StockMonitoringPage extends StatefulWidget {
@@ -178,18 +179,25 @@ class _StockMonitoringPageState extends State<StockMonitoringPage> {
           child: Column(
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Expanded(
+                  ResponsiveSizedBox(
                       child: TextField(
                     decoration: const InputDecoration(labelText: '商品编码'),
                     controller: _itemCodeController,
                   )),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   ElevatedButton(
                       onPressed: _addFavoriteItem, child: const Text("add")),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                      onPressed: _fetchStock, child: const Text("刷新")),
                 ],
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(onPressed: _fetchStock, child: const Text("刷新")),
               const SizedBox(height: 20),
               Expanded(
                 child: SingleChildScrollView(

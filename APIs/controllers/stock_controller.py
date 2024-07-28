@@ -130,6 +130,8 @@ def _get_stock_shipment_infos_v2():
     series = request.args.get("itemSeries")
     start_day = request.args.get("startDay")
     end_day = request.args.get("endDay")
+    page = request.args.get("page", 1, type=int)
+    page_size = request.args.get("pageSize", 20, type=int)
     query = (
         db.session.query(
             Item.item_code,
@@ -162,7 +164,9 @@ def _get_stock_shipment_infos_v2():
     if end_day:
         end_of_day = datetime.fromisoformat(end_day) + timedelta(days=1)
         query = query.filter(Shipment.shipment_date <= end_of_day)
-    results = query.all()
+    total_count = query.count()
+    pagination = query.paginate(page=page, per_page=page_size, error_out=False)
+    search_results = pagination.items
 
     stock_shipment_infos = [
         {
@@ -174,7 +178,12 @@ def _get_stock_shipment_infos_v2():
             "stock_quantity": item.total_stock,
             "shipment_quantity": item.total_shipment,
         }
-        for item in results
+        for item in search_results
     ]
 
-    return jsonify({"stock_shipment_infos": stock_shipment_infos}), 200
+    return (
+        jsonify(
+            {"total_count": total_count, "stock_shipment_infos": stock_shipment_infos}
+        ),
+        200,
+    )

@@ -1,10 +1,12 @@
 from operator import methodcaller
 from flask import Blueprint, jsonify, request
-from sqlalchemy import case, func, desc, text
+from sqlalchemy import asc, case, func, desc, text
 from database import db
 import requests
 from bs4 import BeautifulSoup
+from models.dtos import chiikawa_online_order
 from models.dtos.chiikawa_online_order import ChiikawaOnlineOrder
+from models.dtos.chiikawa_online_order_detail import ChiikawaOnlineOrderDetail
 from models.dtos.favorite_item import FavoriteItem
 from datetime import datetime, time, timedelta
 
@@ -114,6 +116,7 @@ def _fetch_online_order():
 
     # item_code = request.args.get("itemCode")
     item_name = request.args.get("itemName")
+    order_status = request.args.get("orderStatus")
     # item_type = request.args.get("itemType")
     # series = request.args.get("itemSeries")
     start_day = request.args.get("startDay")
@@ -124,33 +127,66 @@ def _fetch_online_order():
 
     query = (
         db.session.query(
-            ChiikawaOnlineOrder.item_code,
+            ChiikawaOnlineOrderDetail.item_code,
             Item.item_name,
             func.sum(
                 case(
                     (
                         ChiikawaOnlineOrder.order_status == "出荷済み",
-                        ChiikawaOnlineOrder.quantity,
+                        ChiikawaOnlineOrderDetail.quantity,
                     ),
                     else_=0,
                 )
             ).label("shipped_quantity"),
-            func.coalesce(func.sum(ChiikawaOnlineOrder.quantity), 0).label(
+            func.coalesce(func.sum(ChiikawaOnlineOrderDetail.quantity), 0).label(
                 "total_quantity"
             ),
+            func.min(ChiikawaOnlineOrder.order_date).label("earliest_order_date"),
         )
-        .outerjoin(Item, Item.item_code == ChiikawaOnlineOrder.item_code)
+        .select_from(ChiikawaOnlineOrder)
+        .outerjoin(
+            ChiikawaOnlineOrderDetail,
+            ChiikawaOnlineOrderDetail.order_no == ChiikawaOnlineOrder.order_no,
+        )
+        .outerjoin(Item, Item.item_code == ChiikawaOnlineOrderDetail.item_code)
         .filter(ChiikawaOnlineOrder.order_date >= datetime.fromisoformat(start_day))
         .filter(
             ChiikawaOnlineOrder.order_date
             <= (datetime.fromisoformat(end_day) + timedelta(days=1))
         )
-        .group_by(ChiikawaOnlineOrder.item_code, Item.item_name)
-        .order_by(desc("total_quantity"))
+        .group_by(ChiikawaOnlineOrderDetail.item_code, Item.item_name)
+        .order_by(desc("earliest_order_date"))
     )
 
     if item_name:
         query = query.filter(Item.item_name.like(f"%{item_name}%"))
+    if order_status in ["出荷済み", "未発送"]:
+        if order_status == "出荷済み":
+            query = query.having(
+                func.sum(
+                    case(
+                        (
+                            ChiikawaOnlineOrder.order_status == "出荷済み",
+                            ChiikawaOnlineOrderDetail.quantity,
+                        ),
+                        else_=0,
+                    )
+                )
+                == func.coalesce(func.sum(ChiikawaOnlineOrderDetail.quantity), 0)
+            )
+        else:
+            query = query.having(
+                func.sum(
+                    case(
+                        (
+                            ChiikawaOnlineOrder.order_status == "出荷済み",
+                            ChiikawaOnlineOrderDetail.quantity,
+                        ),
+                        else_=0,
+                    )
+                )
+                != func.coalesce(func.sum(ChiikawaOnlineOrderDetail.quantity), 0)
+            )
 
     total_count = query.count()
 
@@ -162,8 +198,24 @@ def _fetch_online_order():
             "item_name": result.item_name,
             "shipped_quantity": result.shipped_quantity,
             "total_quantity": result.total_quantity,
+            "earliest_order_date": result.earliest_order_date.isoformat(),
         }
         for result in search_results
     ]
 
     return jsonify({"total_count": total_count, "online_orders": online_orders}), 200
+
+
+@bp_online_store.route("/EarliestUnshippedOrderDate")
+def _fetch_earliest_unshipped_order_date():
+    result = (
+        db.session.query(ChiikawaOnlineOrder.order_date)
+        .filter(ChiikawaOnlineOrder.order_status == "未発送")
+        .order_by(asc(ChiikawaOnlineOrder.order_date))
+        .first()
+    )
+    if result:
+        earliest_date = result[0]
+        return jsonify({"earliest_date": earliest_date.isoformat()}), 200
+    else:
+        return jsonify({"earliest_date": None}), 200

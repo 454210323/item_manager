@@ -7,6 +7,9 @@ import 'package:http/http.dart' as http;
 
 import '../constants.dart';
 import '../models/item.dart';
+import '../models/search_condition.dart';
+import '../widgets/page_button.dart';
+import '../widgets/show_snack_bar.dart';
 import 'register_item_page.dart';
 
 class ItemPage extends StatefulWidget {
@@ -18,32 +21,44 @@ class ItemPage extends StatefulWidget {
 
 class _ItemPageState extends State<ItemPage> {
   List<Item> _items = [];
-  bool _isLoading = false;
+  SearchCondition _searchCondition =
+      SearchCondition(itemCode: '', itemName: '', type: '', series: '');
 
-  Future<void> _fetchData(String itemCode, String itemName, String itemType,
-      String itemSerise) async {
+  bool _isLoading = false;
+  int _currentPage = 1;
+  int _pageSize = 20;
+  int _totalPage = 10;
+
+  Future<void> _fetchData() async {
     setState(() {
       _isLoading = true;
     });
     try {
       var url = Uri.parse(API.ITEM_CONDITIONS).replace(queryParameters: {
-        'itemCode': itemCode,
-        'itemName': itemName,
-        'itemType': itemType,
-        'itemSeries': itemSerise,
+        'itemCode': _searchCondition.itemCode,
+        'itemName': _searchCondition.itemName,
+        'itemType': _searchCondition.type,
+        'itemSeries': _searchCondition.series,
+        'page': _currentPage.toString(),
+        'pageSize': _pageSize.toString()
       });
       var response = await http.get(url);
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body)['items'];
+        var jsonData = json.decode(response.body);
+        var data = jsonData['items'];
+        var totalCount = jsonData['total_count'];
+
         setState(() {
           _items = data.map<Item>((json) => Item.fromJson(json)).toList();
+          _totalPage = (totalCount / _pageSize).ceil();
         });
+        showSnackBar(context, '取得成功', 'success');
       } else {
-        // Handle the error
+        showSnackBar(context, '取得失败', 'error');
       }
     } catch (e) {
-      e.toString();
+      showSnackBar(context, 'An error occurred: $e', 'error');
     } finally {
       setState(() {
         _isLoading = false;
@@ -59,6 +74,26 @@ class _ItemPageState extends State<ItemPage> {
     } else {
       return Item.columnsForLargeScreen;
     }
+  }
+
+  void _onCurrentPageChange(int currentPage) {
+    setState(() {
+      _currentPage = currentPage;
+    });
+    _fetchData();
+  }
+
+  void _onPageSizeChange(int pageSize) {
+    setState(() {
+      _pageSize = pageSize;
+    });
+    _fetchData();
+  }
+
+  void _onSearchConditionChange(SearchCondition searchCondition) {
+    setState(() {
+      _searchCondition = searchCondition;
+    });
   }
 
   @override
@@ -81,7 +116,24 @@ class _ItemPageState extends State<ItemPage> {
               child: const Text('登录新商品'),
             ),
             SearchForm(
-              onSearch: _fetchData,
+              onSearchConditionChange: _onSearchConditionChange,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ElevatedButton(onPressed: _fetchData, child: const Text("Search")),
+            const SizedBox(
+              height: 10,
+            ),
+            _items.isNotEmpty
+                ? PageButton(
+                    totalPages: _totalPage,
+                    onCurrentPageChange: _onCurrentPageChange,
+                    onPageSizeChange: _onPageSizeChange,
+                  )
+                : Container(),
+            const SizedBox(
+              height: 10,
             ),
             Expanded(
               child: SingleChildScrollView(
