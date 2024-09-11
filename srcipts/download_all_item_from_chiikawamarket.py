@@ -1,3 +1,4 @@
+from io import BytesIO
 from Utils import (
     chrome_driver,
     download_image,
@@ -20,6 +21,8 @@ from urls import (
     naganomarket_new_items_url,
 )
 import requests
+from azure.storage.blob import ContainerClient, ContentSettings
+
 
 base_url = chiikawamarket_new_items_url
 resource_url = "http://192.168.0.126:5001/static/images/"
@@ -28,6 +31,7 @@ upload_image_endpoint = "http://192.168.0.126:5001/fetch_chikawa_online_store_im
 save_path = (
     r"C:\Users\wuqipeng\Desktop\work\flutter_application\static_resource\static\images"
 )
+AZURE_STORAGE_BLOB_URL = "https://www233.blob.core.windows.net/chiikawa-item-images?sp=racwd&st=2024-07-28T16:21:34Z&se=2025-07-29T00:21:34Z&spr=https&sv=2022-11-02&sr=c&sig=5mkQsDSfHbX8garB4WIYa2BURWfRSidbcNHcSMrLRtk%3D"
 
 
 def find_all_items():
@@ -49,9 +53,6 @@ def find_all_items():
                 item_code = link.split("/")[-1]
                 item = session.query(Item).get(item_code)
                 image_name = f"{item_code}.jpg"
-                response = requests.get(f"{resource_url+image_name}")
-                if item and response.status_code == 200:
-                    continue
 
                 item_name = item_element.find_element(
                     By.CLASS_NAME, "product_name"
@@ -62,26 +63,22 @@ def find_all_items():
                 )
                 if item_code == "4582662953581":
                     pass
-                if not response.status_code == 200:
-                    img_elements = item_element.find_elements(
-                        By.CSS_SELECTOR, ".product--image img"
-                    )
-                    for img_element in img_elements:
-                        image_srcset = img_element.get_attribute("data-srcset")
-                        if image_srcset:
-                            img_src = find_image_src(image_srcset)
-                            break
-                        image_srcset = img_element.get_attribute("srcset")
-                        if image_srcset:
-                            img_src = find_image_src(image_srcset)
-                            break
-
-                        img_src = img_element.get_attribute("src")
+                img_elements = item_element.find_elements(
+                    By.CSS_SELECTOR, ".product--image img"
+                )
+                for img_element in img_elements:
+                    image_srcset = img_element.get_attribute("data-srcset")
+                    if image_srcset:
+                        img_src = find_image_src(image_srcset)
+                        break
+                    image_srcset = img_element.get_attribute("srcset")
+                    if image_srcset:
+                        img_src = find_image_src(image_srcset)
                         break
 
-                    download_image(img_src, f"{save_path}/{image_name}")
-                    # upload_image_to_server(img_src, upload_image_endpoint, item_code)
-                    # requests.get(upload_image_endpoint, params={"item_code": item_code})
+                    img_src = img_element.get_attribute("src")
+                    break
+
                 if not item:
                     item = Item(
                         item_code=item_code,
@@ -91,6 +88,30 @@ def find_all_items():
                         price=price,
                     )
                     item_list.append(item)
+
+                    # 下载图片
+                    response = requests.get(img_src)
+                    image_data = BytesIO(response.content)
+
+                    container_client = ContainerClient(
+                        account_url=AZURE_STORAGE_BLOB_URL,
+                        container_name="chiikawa-item-images",
+                    )
+                    # 根据文件后缀确定 content_type
+                    content_type = "image/jpeg"
+
+                    content_settings = ContentSettings(
+                        content_type=content_type, content_disposition="inline"
+                    )
+
+                    container_client.upload_blob(
+                        name=image_name,
+                        data=image_data,
+                        blob_type="BlockBlob",
+                        overwrite=True,
+                        content_settings=content_settings,
+                    )
+
             except Exception as e:
                 print(e)
                 with open("error_item.txt", "a", encoding="utf-8") as f:

@@ -24,6 +24,7 @@ def upload_blob_file_stream(file_path: Path):
                 data=data,
                 blob_type="BlockBlob",
                 overwrite=True,
+                content_settings=content_settings,
             )
         return True
     except Exception as e:

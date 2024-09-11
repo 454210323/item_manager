@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:image_picker_web/image_picker_web.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 import 'package:mime/mime.dart';
 
@@ -18,9 +18,9 @@ import '../widgets/barcode_scanner.dart';
 import '../widgets/show_snack_bar.dart';
 
 class RegisterItemPage extends StatefulWidget {
-  final String itemCode;
+  final String? itemCode;
 
-  const RegisterItemPage({super.key, this.itemCode = ''});
+  const RegisterItemPage({super.key, this.itemCode});
 
   @override
   _RegisterItemPageState createState() => _RegisterItemPageState();
@@ -42,11 +42,14 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
   @override
   void initState() {
     super.initState();
-    _itemCodeController.text = widget.itemCode;
-    setState(() {
-      _isUpdate = widget.itemCode.isNotEmpty;
-    });
-    _fetchItem();
+
+    if (widget.itemCode != null) {
+      _itemCodeController.text = widget.itemCode!;
+      _fetchItem();
+      setState(() {
+        _isUpdate = true;
+      });
+    }
   }
 
   Future<void> _fetchItem() async {
@@ -75,15 +78,15 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
   Future<void> _pickImage() async {
     if (kIsWeb) {
       // Web平台选择图片
-      // final Uint8List? bytes = await ImagePickerWeb.getImageAsBytes();
-      // if (!mounted) return; // 检查是否挂载
-      // if (bytes != null) {
-      //   setState(() {
-      //     _imageBytes = bytes;
-      //   });
-      // } else {
-      //   showSnackBar(context, 'No image selected', 'error');
-      // }
+      final Uint8List? bytes = await ImagePickerWeb.getImageAsBytes();
+      if (!mounted) return; // 检查是否挂载
+      if (bytes != null) {
+        setState(() {
+          _imageBytes = bytes;
+        });
+      } else {
+        showSnackBar(context, 'No image selected', 'error');
+      }
     } else {
       // 移动平台选择图片
       final ImageSource? source = await showDialog<ImageSource>(
@@ -144,15 +147,28 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
       request.fields['itemType'] = _itemTypeController.text;
       request.fields['series'] = _seriesController.text;
       request.fields['price'] = Decimal.parse(_priceController.text).toString();
-      String mimeType =
-          lookupMimeType(_imageFile!.path) ?? 'application/octet-stream';
-      List<String> mimeTypes = mimeType.split('/');
 
-      request.files.add(await http.MultipartFile.fromPath(
-        'image',
-        _imageFile!.path,
-        contentType: MediaType(mimeTypes[0], mimeTypes[1]),
-      ));
+      if (kIsWeb && _imageBytes != null) {
+        // Web平台上传图片
+        request.files.add(http.MultipartFile.fromBytes(
+          'image',
+          _imageBytes!,
+          filename: 'upload.jpg', // 可以根据实际情况更改
+          contentType: MediaType('image', 'jpeg'), // 假设图片是jpeg格式
+        ));
+      } else if (_imageFile != null) {
+        // 移动平台上传图片
+        String mimeType =
+            lookupMimeType(_imageFile!.path) ?? 'application/octet-stream';
+        List<String> mimeTypes = mimeType.split('/');
+
+        request.files.add(await http.MultipartFile.fromPath(
+          'image',
+          _imageFile!.path,
+          contentType: MediaType(mimeTypes[0], mimeTypes[1]),
+        ));
+      }
+
       final response = await request.send();
       if (response.statusCode == 200) {
         showSnackBar(context, 'Registration successful', 'success');
@@ -191,14 +207,14 @@ class _RegisterItemPageState extends State<RegisterItemPage> {
                   ),
                   ElevatedButton(
                     onPressed: _isUpdate
-                        ? () async {
+                        ? null
+                        : () async {
                             String result = await BarcodeScanner.scanBarcode();
                             if (!mounted) return;
                             setState(() {
                               _itemCodeController.text = result;
                             });
-                          }
-                        : null,
+                          },
                     child: const Text('Scan'),
                   )
                 ],

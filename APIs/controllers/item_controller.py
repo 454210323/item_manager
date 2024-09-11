@@ -7,7 +7,7 @@ from database import db
 import logging
 import requests
 import os
-from azure.storage.blob import ContainerClient
+from azure.storage.blob import ContainerClient, ContentSettings
 
 bp_item = Blueprint("item", __name__, url_prefix="/Item")
 
@@ -52,12 +52,24 @@ def _register_item():
                 account_url=AZURE_STORAGE_BLOB_URL,
                 container_name="chiikawa-item-images",
             )
+            # 获取文件名和后缀
+            _, file_extension = os.path.splitext(file.filename)
+
+            # 根据文件后缀确定 content_type
+            content_type = (
+                "image/jpeg" if file_extension.lower() == ".jpg" else "image/png"
+            )
+
+            content_settings = ContentSettings(
+                content_type=content_type, content_disposition="inline"
+            )
 
             container_client.upload_blob(
-                name=file.filename,
+                name=f"{new_item.item_code}.jpg",
                 data=file.stream,
                 blob_type="BlockBlob",
                 overwrite=True,
+                content_settings=content_settings,
             )
 
         db.session.add(new_item)
@@ -95,11 +107,24 @@ def _update_item():
                 container_name="chiikawa-item-images",
             )
 
+            # 获取文件名和后缀
+            _, file_extension = os.path.splitext(file.filename)
+
+            # 根据文件后缀确定 content_type
+            content_type = (
+                "image/jpeg" if file_extension.lower() == ".jpg" else "image/png"
+            )
+
+            content_settings = ContentSettings(
+                content_type=content_type, content_disposition="inline"
+            )
+
             container_client.upload_blob(
-                name=file.filename,
+                name=f"{item.item_code}.jpg",
                 data=file.stream,
                 blob_type="BlockBlob",
                 overwrite=True,
+                content_settings=content_settings,
             )
         return jsonify({"message": "Item added successfully"}), 200
 
